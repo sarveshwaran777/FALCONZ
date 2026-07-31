@@ -690,7 +690,8 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 #view-drone-dashboard.active {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     gap: 1.5rem;
     width: 100%;
     height: 100%;
