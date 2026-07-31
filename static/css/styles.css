@@ -1672,14 +1672,14 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     width: 100%;
     height: calc(100vh - var(--header-height, 64px));
     overflow: hidden !important;
-    padding: 0.35rem 0.65rem;
+    padding: 1rem 1.25rem;
     box-sizing: border-box;
 }
 
 .cal-wizard-container {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.85rem;
     max-width: 100%;
     height: 100%;
     width: 100%;
@@ -1689,11 +1689,11 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 0.4rem 0.85rem;
+    padding: 0.75rem 1.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 1.5rem;
     box-shadow: var(--shadow-card);
     flex-shrink: 0;
 }
@@ -1944,77 +1944,72 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     justify-content: center;
 }
 
-/* Ultra High-Visibility Docked Action Bar */
+/* High-Visibility Locked Calibration Action Bar */
 .cal-action-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 0.85rem 1.25rem !important;
-    background: #090D1A !important;
-    border-top: 2px solid var(--primary) !important;
+    padding: 0.75rem 1.25rem !important;
+    background: #080D1F !important;
+    border-top: 1px solid #1E293B !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
     margin-top: auto;
     flex-shrink: 0 !important;
     z-index: 100 !important;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.5);
-    border-bottom-left-radius: var(--radius-lg);
-    border-bottom-right-radius: var(--radius-lg);
-}
-
-.cal-action-row .btn-primary,
-.cal-action-row .btn-success,
-.cal-action-row .btn-lg {
-    font-size: 0.95rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 0.5px !important;
-    padding: 0.75rem 1.5rem !important;
-    border-radius: var(--radius-md) !important;
-    text-transform: uppercase !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease-in-out !important;
+    position: relative;
+    border-bottom-left-radius: var(--radius-md);
+    border-bottom-right-radius: var(--radius-md);
 }
 
 .cal-action-row .btn-primary {
-    background: linear-gradient(135deg, #2563EB, #3B82F6) !important;
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%) !important;
     color: #FFFFFF !important;
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    padding: 0.65rem 1.5rem !important;
+    border-radius: var(--radius-pill) !important;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.4) !important;
     border: 1px solid #60A5FA !important;
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.5) !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
 }
 
 .cal-action-row .btn-primary:hover {
-    background: linear-gradient(135deg, #1D4ED8, #2563EB) !important;
-    box-shadow: 0 0 24px rgba(59, 130, 246, 0.75) !important;
-    transform: translateY(-1px) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.6) !important;
 }
 
 .cal-action-row .btn-success {
-    background: linear-gradient(135deg, #059669, #10B981) !important;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
     color: #FFFFFF !important;
+    font-size: 0.88rem !important;
+    font-weight: 800 !important;
+    padding: 0.65rem 1.5rem !important;
+    border-radius: var(--radius-pill) !important;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.4) !important;
     border: 1px solid #34D399 !important;
-    box-shadow: 0 0 16px rgba(16, 185, 129, 0.5) !important;
+    cursor: pointer !important;
+    transition: all 0.25s ease !important;
 }
 
 .cal-action-row .btn-success:hover {
-    background: linear-gradient(135deg, #047857, #059669) !important;
-    box-shadow: 0 0 24px rgba(16, 185, 129, 0.75) !important;
-    transform: translateY(-1px) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.6) !important;
 }
 
-.cal-action-row .btn-secondary,
-.cal-action-row .btn-sm {
-    font-size: 0.85rem !important;
-    font-weight: 700 !important;
-    padding: 0.6rem 1.1rem !important;
+.cal-action-row .btn-secondary {
     background: rgba(30, 41, 59, 0.8) !important;
-    color: #94A3B8 !important;
-    border: 1px solid #475569 !important;
-    border-radius: var(--radius-md) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    padding: 0.55rem 1.15rem !important;
+    border-radius: var(--radius-pill) !important;
+    border: 1px solid var(--border-color) !important;
 }
 
-.cal-action-row .btn-secondary:hover {
-    background: rgba(51, 65, 85, 0.9) !important;
-    color: #F8FAFC !important;
-    border-color: #94A3B8 !important;
+.cal-action-row.full-width {
+    width: 100%;
 }
 
 /* 6-Position Accel Setup Cards */
