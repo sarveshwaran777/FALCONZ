@@ -1492,52 +1492,50 @@ class CalibrationWizardManager {
 
     initEventListeners() {
         const btnInstall = document.getElementById('btn-install-frame');
-        const btnGotoStep2 = document.getElementById('btn-goto-step-2');
-        const btnConfirmAccel = document.getElementById('btn-confirm-accel-pos');
-        const btnGotoStep3 = document.getElementById('btn-goto-step-3');
+        const btnCaptureAccel = document.getElementById('btn-capture-accel');
+        const btnFinishCompass = document.getElementById('btn-finish-compass');
+        const btnBackToStep1 = document.getElementById('btn-back-to-step1');
+        const btnBackToStep2 = document.getElementById('btn-back-to-step2');
         const btnReturnHome = document.getElementById('btn-return-home-now');
+        const selectedFrameLabel = document.getElementById('selected-frame-label');
+
         const frameRadios = document.querySelectorAll('input[name="frame_type_radio"]');
         frameRadios.forEach(radio => {
             radio.addEventListener('change', (e) => {
                 document.querySelectorAll('.mp-frame-row').forEach(row => row.classList.remove('active'));
                 const parentRow = e.target.closest('.mp-frame-row');
                 if (parentRow) parentRow.classList.add('active');
+                if (selectedFrameLabel) {
+                    selectedFrameLabel.textContent = `'${e.target.value}'`;
+                }
             });
         });
 
         if (btnInstall) {
             btnInstall.addEventListener('click', async () => {
                 const checkedRadio = document.querySelector('input[name="frame_type_radio"]:checked');
-                const val = checkedRadio ? checkedRadio.value : 'plus';
-                const frameNameMap = {
-                    'plus': "'Plus' (Quad / Hexa / Octo / Heli)",
-                    'x': "'X', 'Y6A' (Quad / Hexa / Octo / Coaxial)",
-                    'v': "'V' Quadrotor",
-                    'vtail': "'V Tail' Quadrotor",
-                    'h': "'H' Quadrotor",
-                    'y6b': "'Y6B' Coaxial Frame"
-                };
-                const text = frameNameMap[val] || val.toUpperCase();
+                const val = checkedRadio ? checkedRadio.value : 'X';
                 try {
-                    const res = await fetch('/api/calibration/frame', {
+                    await fetch('/api/calibration/frame', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: text })
+                        body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: val })
                     });
-                    const data = await res.json();
-                    if (window.showVlcToast) window.showVlcToast(`✅ ${data.message}`, 'success');
-                } catch (e) {
-                    if (window.showVlcToast) window.showVlcToast('Frame configuration installed successfully', 'success');
-                }
+                } catch (e) {}
+                this.setStep(2);
             });
         }
 
-        if (btnGotoStep2) {
-            btnGotoStep2.addEventListener('click', () => this.setStep(2));
+        if (btnBackToStep1) {
+            btnBackToStep1.addEventListener('click', () => this.setStep(1));
         }
 
-        if (btnConfirmAccel) {
-            btnConfirmAccel.addEventListener('click', async () => {
+        if (btnBackToStep2) {
+            btnBackToStep2.addEventListener('click', () => this.setStep(2));
+        }
+
+        if (btnCaptureAccel) {
+            btnCaptureAccel.addEventListener('click', async () => {
                 const currentPos = this.accelPositions[this.accelStepIndex];
                 try {
                     await fetch('/api/calibration/accel', {
@@ -1547,49 +1545,53 @@ class CalibrationWizardManager {
                     });
                 } catch (e) {}
 
-                // Mark current pos card completed
-                const card = document.getElementById(`pos-card-${currentPos}`);
+                const cardMap = {
+                    'level': 'orient-level',
+                    'left': 'orient-left',
+                    'right': 'orient-right',
+                    'down': 'orient-nosedown',
+                    'up': 'orient-noseup',
+                    'back': 'orient-back'
+                };
+                const cardId = cardMap[currentPos];
+                const card = document.getElementById(cardId);
                 if (card) {
                     card.classList.remove('active');
                     card.classList.add('completed');
-                    const statusSpan = card.querySelector('.orient-status');
-                    if (statusSpan) {
-                        statusSpan.textContent = 'DONE ✓';
-                        statusSpan.className = 'orient-status status-completed';
+                    const badge = document.getElementById(`badge-${cardId}`);
+                    if (badge) {
+                        badge.textContent = 'DONE ✓';
+                        badge.className = 'orient-status status-completed';
                     }
                 }
 
                 this.accelStepIndex++;
                 if (this.accelStepIndex < this.accelPositions.length) {
                     const nextPos = this.accelPositions[this.accelStepIndex];
-                    const nextCard = document.getElementById(`pos-card-${nextPos}`);
+                    const nextCardId = cardMap[nextPos];
+                    const nextCard = document.getElementById(nextCardId);
                     if (nextCard) {
                         nextCard.classList.add('active');
-                        const statusSpan = nextCard.querySelector('.orient-status');
-                        if (statusSpan) {
-                            statusSpan.textContent = 'READY';
-                            statusSpan.className = 'orient-status status-active';
+                        const badge = document.getElementById(`badge-${nextCardId}`);
+                        if (badge) {
+                            badge.textContent = 'CURRENT TARGET';
+                            badge.className = 'orient-status status-active';
                         }
                     }
-                    this.updateAccelGuideUI(nextPos);
+                    if (btnCaptureAccel) {
+                        const labels = ['LEVEL', 'LEFT SIDE', 'RIGHT SIDE', 'NOSE DOWN', 'NOSE UP', 'INVERTED'];
+                        btnCaptureAccel.innerHTML = `<span>CAPTURE POSITION (${this.accelStepIndex + 1}/6: ${labels[this.accelStepIndex]}) →</span>`;
+                    }
                 } else {
-                    // All 6 positions confirmed!
-                    const tTitle = document.getElementById('target-orient-title');
-                    const tDesc = document.getElementById('target-orient-instructions');
-                    if (tTitle) tTitle.textContent = '🎉 All 6 Accel Positions Completed!';
-                    if (tDesc) tDesc.textContent = 'Accelerometer offsets captured. Click below to start 3D Compass Calibration.';
-                    const btnConfirm = document.getElementById('btn-confirm-accel-pos');
-                    const btnS3 = document.getElementById('btn-goto-step-3');
-                    if (btnConfirm) btnConfirm.style.display = 'none';
-                    if (btnS3) btnS3.style.display = 'inline-flex';
+                    this.setStep(3);
+                    fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
                 }
             });
         }
 
-        if (btnGotoStep3) {
-            btnGotoStep3.addEventListener('click', () => {
-                this.setStep(3);
-                fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
+        if (btnFinishCompass) {
+            btnFinishCompass.addEventListener('click', () => {
+                this.setStep(4);
             });
         }
 
