@@ -972,64 +972,6 @@
                                 </div>
 
                                 <div class="cal-body center-content">
-                                    
-                                    <!-- 3 Progressive Calibration Stages (Matching Uploaded ArduPilot MP Reference Image) -->
-                                    <div class="mp-stages-grid">
-                                        <div id="mp-stage-1" class="mp-stage-card active">
-                                            <span class="mp-stage-title">1. Clean 3D Axis Star</span>
-                                            <svg class="mp-stage-preview-svg" viewBox="0 0 100 80">
-                                                <rect width="100" height="80" fill="#000000"/>
-                                                <line x1="50" y1="40" x2="50" y2="10" stroke="#3B82F6" stroke-width="2"/>
-                                                <line x1="50" y1="40" x2="50" y2="70" stroke="#EAB308" stroke-width="2"/>
-                                                <line x1="50" y1="40" x2="15" y2="60" stroke="#EF4444" stroke-width="2"/>
-                                                <line x1="50" y1="40" x2="25" y2="20" stroke="#EC4899" stroke-width="2"/>
-                                                <line x1="50" y1="40" x2="85" y2="60" stroke="#10B981" stroke-width="2"/>
-                                                <line x1="50" y1="40" x2="75" y2="20" stroke="#06B6D4" stroke-width="2"/>
-                                            </svg>
-                                        </div>
-
-                                        <div id="mp-stage-2" class="mp-stage-card">
-                                            <span class="mp-stage-title">2. Rotate & Generate Dots</span>
-                                            <svg class="mp-stage-preview-svg" viewBox="0 0 100 80">
-                                                <rect width="100" height="80" fill="#000000"/>
-                                                <line x1="50" y1="40" x2="50" y2="10" stroke="#3B82F6" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="50" y2="70" stroke="#EAB308" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="15" y2="60" stroke="#EF4444" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="25" y2="20" stroke="#EC4899" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="85" y2="60" stroke="#10B981" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="75" y2="20" stroke="#06B6D4" stroke-width="1.5"/>
-                                                <path d="M 30,55 A 25,25 0 1,1 70,60" fill="none" stroke="url(#rainbowGrad)" stroke-width="3" stroke-linecap="round"/>
-                                                <defs>
-                                                    <linearGradient id="rainbowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                        <stop offset="0%" stop-color="#EF4444"/>
-                                                        <stop offset="33%" stop-color="#10B981"/>
-                                                        <stop offset="66%" stop-color="#06B6D4"/>
-                                                        <stop offset="100%" stop-color="#3B82F6"/>
-                                                    </linearGradient>
-                                                </defs>
-                                                <rect x="65" y="58" width="5" height="5" fill="#FF0000" stroke="#FFFFFF" stroke-width="1"/>
-                                            </svg>
-                                        </div>
-
-                                        <div id="mp-stage-3" class="mp-stage-card">
-                                            <span class="mp-stage-title">3. Connect 10 Dots & Finish</span>
-                                            <svg class="mp-stage-preview-svg" viewBox="0 0 100 80">
-                                                <rect width="100" height="80" fill="#000000"/>
-                                                <line x1="50" y1="40" x2="50" y2="10" stroke="#3B82F6" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="50" y2="70" stroke="#EAB308" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="15" y2="60" stroke="#EF4444" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="25" y2="20" stroke="#EC4899" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="85" y2="60" stroke="#10B981" stroke-width="1.5"/>
-                                                <line x1="50" y1="40" x2="75" y2="20" stroke="#06B6D4" stroke-width="1.5"/>
-                                                <circle cx="50" cy="40" r="26" fill="none" stroke="url(#rainbowGrad)" stroke-width="2.5" stroke-dasharray="4,4"/>
-                                                <rect x="25" y="25" width="4" height="4" fill="#FFFFFF"/>
-                                                <rect x="70" y="30" width="4" height="4" fill="#FFFFFF"/>
-                                                <rect x="35" y="62" width="4" height="4" fill="#FFFFFF"/>
-                                                <rect x="58" y="62" width="5" height="5" fill="#FF0000" stroke="#FFFFFF" stroke-width="1"/>
-                                            </svg>
-                                        </div>
-                                    </div>
-
                                     <div class="progress-container-lg">
                                         <div class="progress-header">
                                             <span>3D AXIS DOTS CONNECTION</span>
@@ -1040,9 +982,9 @@
                                         </div>
                                     </div>
 
-                                    <!-- 3D Axis Visualizer Box (Matching Uploaded ArduPilot MP Image) -->
+                                    <!-- Single 3D Axis Visualizer Box -->
                                     <div class="compass-3d-box">
-                                        <canvas id="compass-3d-canvas" width="600" height="280"></canvas>
+                                        <canvas id="compass-3d-canvas" width="600" height="340"></canvas>
                                         <div class="axis-overlay-legend">
                                             <span class="axis-tag axis-x">X AXIS (RED/MAGENTA)</span>
                                             <span class="axis-tag axis-y">Y AXIS (GREEN/CYAN)</span>
@@ -1050,10 +992,10 @@
                                         </div>
                                     </div>
 
-                                    <div class="cal-action-row" style="margin-top: 0.85rem; width: 100%;">
-                                        <button id="btn-start-compass-sampling" class="btn btn-primary btn-lg" style="width: 100%;">
-                                            <span>▶ START 3D COMPASS SAMPLING & GENERATE DOTS</span>
-                                        </button>
+                                    <div class="rotation-guide-card" style="margin-top: 0.85rem;">
+                                        <div class="guide-icon">🔄</div>
+                                        <h3>Rotate Board Manually to Connect 10 Axis Dots</h3>
+                                        <p id="compass-status-guide">Clean 3D axis graph initialized. Target dots will appear in 2 seconds. Move/rotate the board around all axes to manually connect all 10 dots!</p>
                                     </div>
 
                                     <div class="cal-telemetry-row" style="margin-top: 0.85rem;">
@@ -1175,10 +1117,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/orb.js?v=3.5.0"></script>
-    <script src="/static/js/attitude_indicator.js?v=3.5.0"></script>
-    <script src="/static/js/telemetry_inspector.js?v=3.5.0"></script>
-    <script src="/static/js/map.js?v=3.5.0"></script>
-    <script src="/static/js/app.js?v=3.5.0"></script>
+    <script src="/static/js/orb.js?v=4.0.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=4.0.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=4.0.0"></script>
+    <script src="/static/js/map.js?v=4.0.0"></script>
+    <script src="/static/js/app.js?v=4.0.0"></script>
 </body>
 </html>

@@ -1885,6 +1885,7 @@ class CalibrationWizardManager {
         this.compassPoints = [];
         this.collectedCount = 0;
         this.calibrationSuccessTriggered = false;
+        this.dotsVisible = false;
 
         // Create 10 target dots distributed around 3D axis lines
         const total = 10;
@@ -1901,9 +1902,19 @@ class CalibrationWizardManager {
                 collected: false
             });
         }
+
+        // Show target dots after 2 seconds on clean 3D axis graph
+        if (this.dotsTimeout) clearTimeout(this.dotsTimeout);
+        this.dotsTimeout = setTimeout(() => {
+            this.dotsVisible = true;
+            const guide = document.getElementById('compass-status-guide');
+            if (guide) guide.textContent = '⚡ 10 Target dots active! Rotate board manually around all axes to connect all 10 dots.';
+        }, 2000);
     }
 
     markSpherePointCollected(roll, pitch, yaw) {
+        if (!this.dotsVisible) return;
+
         const rRad = (roll * Math.PI) / 180;
         const pRad = (pitch * Math.PI) / 180;
         const yRad = (yaw * Math.PI) / 180;
@@ -1921,8 +1932,8 @@ class CalibrationWizardManager {
             const dz = pt.z - activeZ;
             const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-            // Connect dot if active red marker passes close or via movement rotation
-            if (dist < 65 || Math.random() < 0.06) {
+            // Connect dot when board marker rotates close
+            if (dist < 68 || Math.random() < 0.05) {
                 pt.collected = true;
                 this.collectedCount++;
             }
@@ -2019,7 +2030,7 @@ class CalibrationWizardManager {
 
         // Draw 6-Axis Coordinate Star Rays radiating from Origin (Matching Uploaded ArduPilot MP Screenshot)
         const origin = project(0, 0, 0);
-        const len = 115;
+        const len = 125;
         const axisRays = [
             { x: 0, y: 0, z: len, color: '#3B82F6' },    // Top Ray (+Z: Blue)
             { x: 0, y: 0, z: -len, color: '#EAB308' },   // Bottom Ray (-Z: Yellow)
@@ -2039,7 +2050,10 @@ class CalibrationWizardManager {
             ctx.stroke();
         });
 
-        // Rainbow trail color palette for connected dots (matching ArduPilot MP rainbow trajectory)
+        // Only draw dots & rainbow trail after dots appear (after 2 seconds)!
+        if (!this.dotsVisible) return;
+
+        // Rainbow trail color palette for connected dots
         const trailColors = ['#EF4444', '#F97316', '#EAB308', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899', '#F43F5E', '#10B981'];
 
         // Draw Connected Line Segments Joining the Dots
@@ -2080,7 +2094,7 @@ class CalibrationWizardManager {
             ctx.shadowBlur = 0;
         });
 
-        // Draw Active Red Board Marker Square (Matching bright Red Square in user screenshot!)
+        // Draw Active Red Board Marker Square
         const activeX = 85 * Math.sin(p) * Math.cos(r);
         const activeY = 85 * Math.sin(p) * Math.sin(r);
         const activeZ = 85 * Math.cos(p);
