@@ -2386,12 +2386,20 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 /* High-Visibility Left Telemetry Sidebar Styling */
-.cal-pfd-col .card {
+.cal-pfd-col .card,
+.cal-telemetry-card {
     background: #090F24 !important;
     border: 1px solid #1E293B !important;
     border-radius: var(--radius-md) !important;
     padding: 0.85rem !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+    margin-bottom: 0.85rem !important;
 }
 
 .cal-pfd-col .card-title {
