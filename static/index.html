@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <!-- Custom Modern SaaS GCS Stylesheet -->
-    <link rel="stylesheet" href="/static/css/styles.css?v=14.0.0">
+    <link rel="stylesheet" href="/static/css/styles.css?v=15.0.0">
 </head>
 <body class="saas-body">
 
@@ -836,6 +836,22 @@
                                                     <input type="radio" id="frame-x" name="frame_type_radio" value="X" checked>
                                                     <span class="mp-row-title">'X', 'Y6A' (Standard)</span>
                                                 </div>
+                                                <div class="mp-frame-thumb">
+                                                    <svg width="42" height="42" viewBox="0 0 50 50">
+                                                        <line x1="10" y1="10" x2="40" y2="40" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="40" y1="10" x2="10" y2="40" stroke="#10B981" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <rect x="19" y="19" width="12" height="12" rx="2" fill="#0F172A" stroke="#3B5BFF" stroke-width="1.5"/>
+                                                        <polygon points="25,20 22,24 28,24" fill="#00F3FF"/>
+                                                        <circle cx="10" cy="10" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="40" cy="10" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="40" cy="40" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="10" cy="40" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <ellipse cx="10" cy="10" rx="8" ry="2.5" fill="rgba(59, 130, 246, 0.5)" transform="rotate(45 10 10)"/>
+                                                        <ellipse cx="40" cy="10" rx="8" ry="2.5" fill="rgba(16, 185, 129, 0.5)" transform="rotate(-45 40 10)"/>
+                                                        <ellipse cx="40" cy="40" rx="8" ry="2.5" fill="rgba(59, 130, 246, 0.5)" transform="rotate(45 40 40)"/>
+                                                        <ellipse cx="10" cy="40" rx="8" ry="2.5" fill="rgba(16, 185, 129, 0.5)" transform="rotate(-45 10 40)"/>
+                                                    </svg>
+                                                </div>
                                                 <span class="mp-icon-label">Quad X, Hexa X, Octo X, Tricopter</span>
                                             </label>
 
@@ -844,6 +860,22 @@
                                                 <div class="mp-radio-wrap">
                                                     <input type="radio" id="frame-plus" name="frame_type_radio" value="Plus">
                                                     <span class="mp-row-title">'Plus'</span>
+                                                </div>
+                                                <div class="mp-frame-thumb">
+                                                    <svg width="42" height="42" viewBox="0 0 50 50">
+                                                        <line x1="25" y1="6" x2="25" y2="44" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="6" y1="25" x2="44" y2="25" stroke="#10B981" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <rect x="19" y="19" width="12" height="12" rx="2" fill="#0F172A" stroke="#3B5BFF" stroke-width="1.5"/>
+                                                        <polygon points="25,20 22,24 28,24" fill="#00F3FF"/>
+                                                        <circle cx="25" cy="6" r="5" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="44" cy="25" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="25" cy="44" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="6" cy="25" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <ellipse cx="25" cy="6" rx="8" ry="2.5" fill="rgba(239, 68, 68, 0.5)"/>
+                                                        <ellipse cx="44" cy="25" rx="2.5" ry="8" fill="rgba(16, 185, 129, 0.5)"/>
+                                                        <ellipse cx="25" cy="44" rx="8" ry="2.5" fill="rgba(59, 130, 246, 0.5)"/>
+                                                        <ellipse cx="6" cy="25" rx="2.5" ry="8" fill="rgba(16, 185, 129, 0.5)"/>
+                                                    </svg>
                                                 </div>
                                                 <span class="mp-icon-label">Plus Quad, Hexa, Octo, Heli</span>
                                             </label>
@@ -854,6 +886,20 @@
                                                     <input type="radio" id="frame-v" name="frame_type_radio" value="V">
                                                     <span class="mp-row-title">'V' / 'V Tail'</span>
                                                 </div>
+                                                <div class="mp-frame-thumb">
+                                                    <svg width="42" height="42" viewBox="0 0 50 50">
+                                                        <line x1="8" y1="10" x2="25" y2="28" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="42" y1="10" x2="25" y2="28" stroke="#10B981" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="25" y1="28" x2="16" y2="42" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="25" y1="28" x2="34" y2="42" stroke="#F59E0B" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <rect x="19" y="22" width="12" height="12" rx="2" fill="#0F172A" stroke="#3B5BFF" stroke-width="1.5"/>
+                                                        <polygon points="25,23 22,27 28,27" fill="#00F3FF"/>
+                                                        <circle cx="8" cy="10" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="42" cy="10" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="16" cy="42" r="4.5" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="34" cy="42" r="4.5" fill="#F59E0B" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                    </svg>
+                                                </div>
                                                 <span class="mp-icon-label">V-Tail & VTOL Configurations</span>
                                             </label>
 
@@ -863,6 +909,19 @@
                                                     <input type="radio" id="frame-h" name="frame_type_radio" value="H">
                                                     <span class="mp-row-title">'H'</span>
                                                 </div>
+                                                <div class="mp-frame-thumb">
+                                                    <svg width="42" height="42" viewBox="0 0 50 50">
+                                                        <line x1="12" y1="8" x2="12" y2="42" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="38" y1="8" x2="38" y2="42" stroke="#10B981" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="12" y1="25" x2="38" y2="25" stroke="#3B5BFF" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <rect x="19" y="19" width="12" height="12" rx="2" fill="#0F172A" stroke="#3B5BFF" stroke-width="1.5"/>
+                                                        <polygon points="25,20 22,24 28,24" fill="#00F3FF"/>
+                                                        <circle cx="12" cy="8" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="38" cy="8" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="12" cy="42" r="5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="38" cy="42" r="5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                    </svg>
+                                                </div>
                                                 <span class="mp-icon-label">H-Frame Motor Layout</span>
                                             </label>
 
@@ -871,6 +930,18 @@
                                                 <div class="mp-radio-wrap">
                                                     <input type="radio" id="frame-y6b" name="frame_type_radio" value="Y6B">
                                                     <span class="mp-row-title">'Y6B'</span>
+                                                </div>
+                                                <div class="mp-frame-thumb">
+                                                    <svg width="42" height="42" viewBox="0 0 50 50">
+                                                        <line x1="25" y1="25" x2="25" y2="8" stroke="#EF4444" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="25" y1="25" x2="10" y2="38" stroke="#3B82F6" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <line x1="25" y1="25" x2="40" y2="38" stroke="#10B981" stroke-width="3.5" stroke-linecap="round"/>
+                                                        <rect x="19" y="19" width="12" height="12" rx="2" fill="#0F172A" stroke="#3B5BFF" stroke-width="1.5"/>
+                                                        <polygon points="25,20 22,24 28,24" fill="#00F3FF"/>
+                                                        <circle cx="25" cy="8" r="5.5" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="10" cy="38" r="5.5" fill="#3B82F6" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                        <circle cx="40" cy="38" r="5.5" fill="#10B981" stroke="#FFFFFF" stroke-width="1.5"/>
+                                                    </svg>
                                                 </div>
                                                 <span class="mp-icon-label">Y6B Coaxial Motor Layout</span>
                                             </label>
@@ -1103,10 +1174,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/orb.js?v=14.0.0"></script>
-    <script src="/static/js/attitude_indicator.js?v=14.0.0"></script>
-    <script src="/static/js/telemetry_inspector.js?v=14.0.0"></script>
-    <script src="/static/js/map.js?v=14.0.0"></script>
-    <script src="/static/js/app.js?v=14.0.0"></script>
+    <script src="/static/js/orb.js?v=15.0.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=15.0.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=15.0.0"></script>
+    <script src="/static/js/map.js?v=15.0.0"></script>
+    <script src="/static/js/app.js?v=15.0.0"></script>
 </body>
 </html>

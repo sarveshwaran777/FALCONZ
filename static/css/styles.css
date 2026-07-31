@@ -2510,8 +2510,23 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     color: var(--primary) !important;
 }
 
+.mp-frame-thumb {
+    width: 44px;
+    height: 44px;
+    background: var(--bg-card-subtle) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-sm) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    padding: 2px !important;
+    margin-right: 0.5rem !important;
+}
+
 .mp-icon-label {
     color: var(--text-secondary) !important;
+    font-size: 0.78rem !important;
 }
 
 .orient-card {
