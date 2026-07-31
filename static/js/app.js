@@ -1934,8 +1934,8 @@ class CalibrationWizardManager {
     }
 
     start3DCompassLoop() {
-        if (this.isCompassActive) return;
         this.isCompassActive = true;
+        this.draw3DCompassBox();
         const render = () => {
             if (!this.isCompassActive) return;
             this.draw3DCompassBox();
