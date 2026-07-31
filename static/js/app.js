@@ -907,12 +907,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
 
         const triggerResize = () => {
-            if (gcsMap) gcsMap.invalidateSize();
+            if (gcsMap) {
+                gcsMap.invalidateSize();
+                gcsMap.setSatelliteMode();
+            }
             if (pfd) pfd.forceRedraw();
         };
+        triggerResize();
         setTimeout(triggerResize, 50);
-        setTimeout(triggerResize, 200);
-        setTimeout(triggerResize, 450);
+        setTimeout(triggerResize, 150);
+        setTimeout(triggerResize, 350);
+        setTimeout(triggerResize, 600);
     }
 
     function switchToCamView() {

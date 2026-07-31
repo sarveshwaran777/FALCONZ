@@ -1093,13 +1093,16 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     gap: 0.6rem;
 }
 
+#map,
 .hero-map-container {
     flex: 1;
-    width: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 480px !important;
     border-radius: var(--radius-lg);
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
-    min-height: 0;
+    display: block !important;
     z-index: 10;
 }
 
