@@ -1647,6 +1647,60 @@ class CalibrationWizardManager {
             });
         }
 
+        // Interactive Mouse & Touch Drag Controls for 3D Board Rotation
+        const canvas = document.getElementById('compass-3d-canvas');
+        if (canvas) {
+            let isDragging = false;
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+
+            const onPointerDown = (clientX, clientY) => {
+                isDragging = true;
+                this.isUserDragging = true;
+                lastMouseX = clientX;
+                lastMouseY = clientY;
+            };
+
+            const onPointerMove = (clientX, clientY) => {
+                if (!isDragging) return;
+                const dx = clientX - lastMouseX;
+                const dy = clientY - lastMouseY;
+                lastMouseX = clientX;
+                lastMouseY = clientY;
+
+                this.currentRoll += dx * 0.8;
+                this.currentPitch += dy * 0.8;
+                this.currentYaw += dx * 0.4;
+
+                if (this.currentStep === 3) {
+                    this.markSpherePointCollected(this.currentRoll, this.currentPitch, this.currentYaw);
+                }
+            };
+
+            const onPointerUp = () => {
+                isDragging = false;
+                setTimeout(() => { this.isUserDragging = false; }, 1500);
+            };
+
+            canvas.addEventListener('mousedown', (e) => onPointerDown(e.clientX, e.clientY));
+            window.addEventListener('mousemove', (e) => onPointerMove(e.clientX, e.clientY));
+            window.addEventListener('mouseup', onPointerUp);
+
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches.length > 0) {
+                    onPointerDown(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 0) {
+                    onPointerMove(e.touches[0].clientX, e.touches[0].clientY);
+                }
+            }, { passive: true });
+
+            window.addEventListener('touchend', onPointerUp);
+        }
+
         if (btnFinishCompass) {
             btnFinishCompass.addEventListener('click', () => {
                 this.setStep(4);
@@ -1979,6 +2033,18 @@ class CalibrationWizardManager {
         this.draw3DCompassBox();
         const render = () => {
             if (!this.isCompassActive) return;
+
+            // Continuous 3D rotation if user is not manually dragging canvas
+            if (!this.isUserDragging) {
+                this.currentYaw = (this.currentYaw + 0.8) % 360;
+                this.currentRoll = Math.sin(Date.now() / 700) * 30;
+                this.currentPitch = Math.cos(Date.now() / 900) * 25;
+            }
+
+            if (this.currentStep === 3) {
+                this.markSpherePointCollected(this.currentRoll, this.currentPitch, this.currentYaw);
+            }
+
             this.draw3DCompassBox();
             this.compassAnimFrame = requestAnimationFrame(render);
         };
