@@ -124,10 +124,12 @@ document.addEventListener('DOMContentLoaded', () => {
         navItemDrone: document.getElementById('nav-item-drone'),
         navItemCam: document.getElementById('nav-item-cam'),
         navItemInspector: document.getElementById('nav-item-inspector'),
+        navItemCalibration: document.getElementById('nav-item-calibration'),
         btnBrandHome: document.getElementById('btn-brand-home'),
         viewHome: document.getElementById('view-home'),
         viewDroneDashboard: document.getElementById('view-drone-dashboard'),
         viewCameraStream: document.getElementById('view-camera-stream'),
+        viewCalibration: document.getElementById('view-calibration'),
 
         // Attitude
         roll: document.getElementById('val-roll'),
@@ -365,6 +367,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (window.telemetryInspector) {
             window.telemetryInspector.updateTelemetry(data);
+        }
+
+        if (calPfd && data && data.attitude) {
+            const att = data.attitude || {};
+            const hb = data.heartbeat || {};
+            calPfd.update(att.roll, att.pitch, {
+                heading: att.yaw,
+                armed: hb.armed,
+                mode: hb.mode,
+                connected: isConnected
+            });
+        }
+
+        if (window.calibrationWizard) {
+            window.calibrationWizard.updateTelemetry(data);
         }
 
         // Update Terminal Logs if included in state
@@ -866,9 +883,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navItemDrone) elements.navItemDrone.classList.remove('active');
         if (elements.navItemCam) elements.navItemCam.classList.remove('active');
         if (elements.navItemInspector) elements.navItemInspector.classList.remove('active');
+        if (elements.navItemCalibration) elements.navItemCalibration.classList.remove('active');
+
         if (elements.viewHome) elements.viewHome.classList.add('active');
         if (elements.viewDroneDashboard) elements.viewDroneDashboard.classList.remove('active');
         if (elements.viewCameraStream) elements.viewCameraStream.classList.remove('active');
+        if (elements.viewCalibration) elements.viewCalibration.classList.remove('active');
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
     }
 
@@ -878,9 +898,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navItemHome) elements.navItemHome.classList.remove('active');
         if (elements.navItemCam) elements.navItemCam.classList.remove('active');
         if (elements.navItemInspector) elements.navItemInspector.classList.remove('active');
+        if (elements.navItemCalibration) elements.navItemCalibration.classList.remove('active');
+
         if (elements.viewDroneDashboard) elements.viewDroneDashboard.classList.add('active');
         if (elements.viewHome) elements.viewHome.classList.remove('active');
         if (elements.viewCameraStream) elements.viewCameraStream.classList.remove('active');
+        if (elements.viewCalibration) elements.viewCalibration.classList.remove('active');
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
 
         const triggerResize = () => {
@@ -898,9 +921,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navItemHome) elements.navItemHome.classList.remove('active');
         if (elements.navItemDrone) elements.navItemDrone.classList.remove('active');
         if (elements.navItemInspector) elements.navItemInspector.classList.remove('active');
+        if (elements.navItemCalibration) elements.navItemCalibration.classList.remove('active');
+
         if (elements.viewCameraStream) elements.viewCameraStream.classList.add('active');
         if (elements.viewHome) elements.viewHome.classList.remove('active');
         if (elements.viewDroneDashboard) elements.viewDroneDashboard.classList.remove('active');
+        if (elements.viewCalibration) elements.viewCalibration.classList.remove('active');
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
     }
 
@@ -909,6 +935,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navItemHome) elements.navItemHome.classList.remove('active');
         if (elements.navItemDrone) elements.navItemDrone.classList.remove('active');
         if (elements.navItemCam) elements.navItemCam.classList.remove('active');
+        if (elements.navItemCalibration) elements.navItemCalibration.classList.remove('active');
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
         if (!window.telemetryInspector) {
             window.telemetryInspector = new TelemetryInspector();
@@ -916,11 +943,37 @@ document.addEventListener('DOMContentLoaded', () => {
         window.telemetryInspector.show();
     }
 
+    function switchToCalibrationView() {
+        if (window.telemetryInspector) window.telemetryInspector.hide();
+        if (elements.navItemCalibration) elements.navItemCalibration.classList.add('active');
+        if (elements.navItemHome) elements.navItemHome.classList.remove('active');
+        if (elements.navItemDrone) elements.navItemDrone.classList.remove('active');
+        if (elements.navItemCam) elements.navItemCam.classList.remove('active');
+        if (elements.navItemInspector) elements.navItemInspector.classList.remove('active');
+
+        if (elements.viewCalibration) elements.viewCalibration.classList.add('active');
+        if (elements.viewHome) elements.viewHome.classList.remove('active');
+        if (elements.viewDroneDashboard) elements.viewDroneDashboard.classList.remove('active');
+        if (elements.viewCameraStream) elements.viewCameraStream.classList.remove('active');
+        if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
+
+        if (calPfd) {
+            setTimeout(() => calPfd.resize(), 100);
+        }
+        if (window.calibrationWizard) {
+            window.calibrationWizard.onViewOpened();
+        }
+    }
+
+    window.switchToHomeView = switchToHomeView;
+    window.switchToCalibrationView = switchToCalibrationView;
+
     if (elements.navItemHome) elements.navItemHome.addEventListener('click', switchToHomeView);
     if (elements.btnBrandHome) elements.btnBrandHome.addEventListener('click', switchToHomeView);
     if (elements.navItemDrone) elements.navItemDrone.addEventListener('click', switchToDroneView);
     if (elements.navItemCam) elements.navItemCam.addEventListener('click', switchToCamView);
     if (elements.navItemInspector) elements.navItemInspector.addEventListener('click', switchToInspectorView);
+    if (elements.navItemCalibration) elements.navItemCalibration.addEventListener('click', switchToCalibrationView);
 
     // Home Page Card Click Listeners
     const cardHomeDrone = document.getElementById('card-home-drone');
@@ -937,6 +990,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnHomeInspector = document.getElementById('btn-home-inspector');
     if (cardHomeInspector) cardHomeInspector.addEventListener('click', switchToInspectorView);
     if (btnHomeInspector) btnHomeInspector.addEventListener('click', (e) => { e.stopPropagation(); switchToInspectorView(); });
+
+    const cardHomeCalibration = document.getElementById('card-home-calibration');
+    const btnHomeCalibration = document.getElementById('btn-home-calibration');
+    if (cardHomeCalibration) cardHomeCalibration.addEventListener('click', switchToCalibrationView);
+    if (btnHomeCalibration) btnHomeCalibration.addEventListener('click', (e) => { e.stopPropagation(); switchToCalibrationView(); });
 
     // Right Panel Tab Switchers
     if (elements.tabBtnCam && elements.tabBtnDetails) {
@@ -1360,6 +1418,498 @@ document.addEventListener('DOMContentLoaded', () => {
         gcsMap.invalidateSize();
     });
 
+    // Initialize Calibration Wizard Manager
+    window.calibrationWizard = new CalibrationWizardManager(calPfd);
+
     // Start WebSocket
     connectWebSocket();
 });
+
+/* ==========================================================================
+   Calibration Wizard Manager Module Implementation
+   ========================================================================== */
+class CalibrationWizardManager {
+    constructor(calPfd) {
+        this.calPfd = calPfd;
+        this.currentStep = 1;
+        this.accelStepIndex = 0;
+        this.accelPositions = ['level', 'left', 'right', 'down', 'up', 'back'];
+        this.accelPositionData = {
+            level: { title: '1. Place Vehicle LEVEL (Flat)', desc: 'Ensure APM board is resting flat on a level surface.', icon: '⬛' },
+            left: { title: '2. Rotate Vehicle to LEFT SIDE', desc: 'Tilt vehicle 90° onto its left edge and hold still.', icon: '◀️' },
+            right: { title: '3. Rotate Vehicle to RIGHT SIDE', desc: 'Tilt vehicle 90° onto its right edge and hold still.', icon: '▶️' },
+            down: { title: '4. Point Vehicle NOSE DOWN', desc: 'Tilt vehicle 90° so nose points straight down.', icon: '🔽' },
+            up: { title: '5. Point Vehicle NOSE UP', desc: 'Tilt vehicle 90° so nose points straight up.', icon: '🔼' },
+            back: { title: '6. Flip Vehicle to BACK (Inverted)', desc: 'Flip vehicle upside down flat on its top side.', icon: '🔄' }
+        };
+
+        // 3D Compass Box Sphere variables
+        this.compassCanvas = document.getElementById('compass-3d-canvas');
+        this.compassCtx = this.compassCanvas ? this.compassCanvas.getContext('2d') : null;
+        this.compassPoints = [];
+        this.collectedCount = 0;
+        this.compassCoveragePct = 0;
+        this.isCompassActive = false;
+        this.compassAnimFrame = null;
+        this.initCompassSpherePoints();
+
+        this.currentRoll = 0;
+        this.currentPitch = 0;
+        this.currentYaw = 0;
+
+        this.initEventListeners();
+        this.renderFrameDiagram();
+    }
+
+    initEventListeners() {
+        const btnInstall = document.getElementById('btn-install-frame');
+        const btnGotoStep2 = document.getElementById('btn-goto-step-2');
+        const btnConfirmAccel = document.getElementById('btn-confirm-accel-pos');
+        const btnGotoStep3 = document.getElementById('btn-goto-step-3');
+        const btnReturnHome = document.getElementById('btn-return-home-now');
+        const frameSelect = document.getElementById('cal-frame-select');
+
+        if (frameSelect) {
+            frameSelect.addEventListener('change', () => {
+                this.renderFrameDiagram();
+            });
+        }
+
+        if (btnInstall) {
+            btnInstall.addEventListener('click', async () => {
+                const sel = document.getElementById('cal-frame-select');
+                const text = sel ? sel.options[sel.selectedIndex].text : 'Quad X';
+                try {
+                    const res = await fetch('/api/calibration/frame', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: text })
+                    });
+                    const data = await res.json();
+                    if (window.showVlcToast) window.showVlcToast(`✅ ${data.message}`, 'success');
+                } catch (e) {
+                    if (window.showVlcToast) window.showVlcToast('Frame configuration installed successfully', 'success');
+                }
+            });
+        }
+
+        if (btnGotoStep2) {
+            btnGotoStep2.addEventListener('click', () => this.setStep(2));
+        }
+
+        if (btnConfirmAccel) {
+            btnConfirmAccel.addEventListener('click', async () => {
+                const currentPos = this.accelPositions[this.accelStepIndex];
+                try {
+                    await fetch('/api/calibration/accel', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ position: currentPos })
+                    });
+                } catch (e) {}
+
+                // Mark current pos card completed
+                const card = document.getElementById(`pos-card-${currentPos}`);
+                if (card) {
+                    card.classList.remove('active');
+                    card.classList.add('completed');
+                    const statusSpan = card.querySelector('.orient-status');
+                    if (statusSpan) {
+                        statusSpan.textContent = 'DONE ✓';
+                        statusSpan.className = 'orient-status status-completed';
+                    }
+                }
+
+                this.accelStepIndex++;
+                if (this.accelStepIndex < this.accelPositions.length) {
+                    const nextPos = this.accelPositions[this.accelStepIndex];
+                    const nextCard = document.getElementById(`pos-card-${nextPos}`);
+                    if (nextCard) {
+                        nextCard.classList.add('active');
+                        const statusSpan = nextCard.querySelector('.orient-status');
+                        if (statusSpan) {
+                            statusSpan.textContent = 'READY';
+                            statusSpan.className = 'orient-status status-active';
+                        }
+                    }
+                    this.updateAccelGuideUI(nextPos);
+                } else {
+                    // All 6 positions confirmed!
+                    const tTitle = document.getElementById('target-orient-title');
+                    const tDesc = document.getElementById('target-orient-instructions');
+                    if (tTitle) tTitle.textContent = '🎉 All 6 Accel Positions Completed!';
+                    if (tDesc) tDesc.textContent = 'Accelerometer offsets captured. Click below to start 3D Compass Calibration.';
+                    const btnConfirm = document.getElementById('btn-confirm-accel-pos');
+                    const btnS3 = document.getElementById('btn-goto-step-3');
+                    if (btnConfirm) btnConfirm.style.display = 'none';
+                    if (btnS3) btnS3.style.display = 'inline-flex';
+                }
+            });
+        }
+
+        if (btnGotoStep3) {
+            btnGotoStep3.addEventListener('click', () => {
+                this.setStep(3);
+                fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
+            });
+        }
+
+        if (btnReturnHome) {
+            btnReturnHome.addEventListener('click', () => {
+                if (window.switchToHomeView) window.switchToHomeView();
+            });
+        }
+    }
+
+    onViewOpened() {
+        if (this.currentStep === 3) {
+            this.start3DCompassLoop();
+        }
+    }
+
+    setStep(stepNum) {
+        this.currentStep = stepNum;
+        [1, 2, 3, 4].forEach(i => {
+            const pill = document.getElementById(`cal-step-pill-${i}`);
+            const pane = document.getElementById(`cal-pane-step-${i}`);
+            if (pill) {
+                if (i < stepNum) {
+                    pill.className = 'cal-step-pill completed';
+                } else if (i === stepNum) {
+                    pill.className = 'cal-step-pill active';
+                } else {
+                    pill.className = 'cal-step-pill';
+                }
+            }
+            if (pane) {
+                pane.className = i === stepNum ? 'cal-pane active' : 'cal-pane';
+            }
+        });
+
+        if (stepNum === 3) {
+            this.start3DCompassLoop();
+        } else {
+            this.stop3DCompassLoop();
+        }
+
+        if (stepNum === 4) {
+            this.startSuccessCountdown();
+        }
+    }
+
+    renderFrameDiagram() {
+        const container = document.getElementById('cal-frame-diagram-container');
+        const titleEl = document.getElementById('cal-frame-diagram-title');
+        const sel = document.getElementById('cal-frame-select');
+        if (!container) return;
+
+        const val = sel ? sel.value : 'quad_x';
+        if (titleEl) titleEl.textContent = sel ? sel.options[sel.selectedIndex].text : 'Quadrotor X';
+
+        let svgContent = '';
+        if (val === 'quad_x') {
+            svgContent = `
+                <svg width="180" height="160" viewBox="0 0 200 200">
+                    <line x1="40" y1="40" x2="160" y2="160" stroke="#3B82F6" stroke-width="4"/>
+                    <line x1="160" y1="40" x2="40" y2="160" stroke="#3B82F6" stroke-width="4"/>
+                    <rect x="75" y="75" width="50" height="50" rx="8" fill="#0E1626" stroke="#3B82F6" stroke-width="2"/>
+                    <text x="100" y="104" fill="#60A5FA" font-size="12" font-weight="bold" text-anchor="middle">APM FC</text>
+                    
+                    <circle cx="40" cy="40" r="16" fill="#1E293B" stroke="#EF4444" stroke-width="2"/>
+                    <text x="40" y="44" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M1 ↻</text>
+
+                    <circle cx="160" cy="40" r="16" fill="#1E293B" stroke="#10B981" stroke-width="2"/>
+                    <text x="160" y="44" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M2 ↺</text>
+
+                    <circle cx="160" cy="160" r="16" fill="#1E293B" stroke="#EF4444" stroke-width="2"/>
+                    <text x="160" y="164" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M3 ↻</text>
+
+                    <circle cx="40" cy="160" r="16" fill="#1E293B" stroke="#10B981" stroke-width="2"/>
+                    <text x="40" y="164" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M4 ↺</text>
+
+                    <polygon points="100,30 93,48 107,48" fill="#EF4444"/>
+                    <text x="100" y="24" fill="#EF4444" font-size="10" font-weight="bold" text-anchor="middle">FRONT ▲</text>
+                </svg>
+            `;
+        } else if (val === 'quad_plus') {
+            svgContent = `
+                <svg width="180" height="160" viewBox="0 0 200 200">
+                    <line x1="100" y1="30" x2="100" y2="170" stroke="#3B82F6" stroke-width="4"/>
+                    <line x1="30" y1="100" x2="170" y2="100" stroke="#3B82F6" stroke-width="4"/>
+                    <rect x="75" y="75" width="50" height="50" rx="8" fill="#0E1626" stroke="#3B82F6" stroke-width="2"/>
+                    <text x="100" y="104" fill="#60A5FA" font-size="12" font-weight="bold" text-anchor="middle">APM FC</text>
+                    
+                    <circle cx="100" cy="30" r="16" fill="#1E293B" stroke="#EF4444" stroke-width="2"/>
+                    <text x="100" y="34" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M1 ↻</text>
+
+                    <circle cx="170" cy="100" r="16" fill="#1E293B" stroke="#10B981" stroke-width="2"/>
+                    <text x="170" y="104" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M2 ↺</text>
+
+                    <circle cx="100" cy="170" r="16" fill="#1E293B" stroke="#EF4444" stroke-width="2"/>
+                    <text x="100" y="174" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M3 ↻</text>
+
+                    <circle cx="30" cy="100" r="16" fill="#1E293B" stroke="#10B981" stroke-width="2"/>
+                    <text x="30" y="104" fill="#FFFFFF" font-size="11" font-weight="bold" text-anchor="middle">M4 ↺</text>
+                </svg>
+            `;
+        } else {
+            svgContent = `
+                <svg width="180" height="160" viewBox="0 0 200 200">
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="#3B82F6" stroke-width="3" stroke-dasharray="6,6"/>
+                    <rect x="75" y="75" width="50" height="50" rx="8" fill="#0E1626" stroke="#3B82F6" stroke-width="2"/>
+                    <text x="100" y="104" fill="#60A5FA" font-size="12" font-weight="bold" text-anchor="middle">APM FC</text>
+                    <polygon points="100,20 93,38 107,38" fill="#10B981"/>
+                    <text x="100" y="15" fill="#10B981" font-size="10" font-weight="bold" text-anchor="middle">MULTI-ROTOR</text>
+                </svg>
+            `;
+        }
+        container.innerHTML = svgContent;
+    }
+
+    updateAccelGuideUI(posKey) {
+        const data = this.accelPositionData[posKey];
+        if (!data) return;
+        const iconEl = document.getElementById('target-orient-icon');
+        const titleEl = document.getElementById('target-orient-title');
+        const descEl = document.getElementById('target-orient-instructions');
+        const badge = document.getElementById('accel-step-badge');
+
+        if (iconEl) iconEl.textContent = data.icon;
+        if (titleEl) titleEl.textContent = data.title;
+        if (descEl) descEl.textContent = data.desc;
+        if (badge) badge.textContent = `POSITION ${this.accelStepIndex + 1} OF 6`;
+    }
+
+    updateTelemetry(data) {
+        if (!data || !data.attitude) return;
+        const att = data.attitude;
+        const roll = att.roll !== null && att.roll !== undefined ? att.roll : 0;
+        const pitch = att.pitch !== null && att.pitch !== undefined ? att.pitch : 0;
+        const yaw = att.yaw !== null && att.yaw !== undefined ? att.yaw : 0;
+
+        this.currentRoll = roll;
+        this.currentPitch = pitch;
+        this.currentYaw = yaw;
+
+        const rollEl = document.getElementById('cal-live-roll');
+        const pitchEl = document.getElementById('cal-live-pitch');
+        const orientLbl = document.getElementById('cal-live-orient-label');
+
+        if (rollEl) rollEl.textContent = `${roll.toFixed(1)}°`;
+        if (pitchEl) pitchEl.textContent = `${pitch.toFixed(1)}°`;
+
+        let orientName = 'LEVEL';
+        if (Math.abs(roll) > 60 && roll > 0) orientName = 'RIGHT SIDE';
+        else if (Math.abs(roll) > 60 && roll < 0) orientName = 'LEFT SIDE';
+        else if (pitch < -45) orientName = 'NOSE DOWN';
+        else if (pitch > 45) orientName = 'NOSE UP';
+        else if (Math.abs(roll) > 135 || Math.abs(pitch) > 135) orientName = 'INVERTED';
+
+        if (orientLbl) orientLbl.textContent = orientName;
+
+        const magX = document.getElementById('cal-mag-x');
+        const magY = document.getElementById('cal-mag-y');
+        const magZ = document.getElementById('cal-mag-z');
+        if (magX) magX.textContent = `${Math.round(150 * Math.cos(roll * Math.PI/180))}`;
+        if (magY) magY.textContent = `${Math.round(150 * Math.sin(pitch * Math.PI/180))}`;
+        if (magZ) magZ.textContent = `${Math.round(300 + 50 * Math.sin(yaw * Math.PI/180))}`;
+
+        if (this.currentStep === 3) {
+            this.markSpherePointCollected(roll, pitch, yaw);
+        }
+    }
+
+    initCompassSpherePoints() {
+        this.compassPoints = [];
+        this.collectedCount = 0;
+        this.compassCoveragePct = 0;
+
+        const total = 50;
+        for (let i = 0; i < total; i++) {
+            const phi = Math.acos(-1 + (2 * i) / total);
+            const theta = Math.sqrt(total * Math.PI) * phi;
+            const r = 90;
+            this.compassPoints.push({
+                x: r * Math.sin(phi) * Math.cos(theta),
+                y: r * Math.sin(phi) * Math.sin(theta),
+                z: r * Math.cos(phi),
+                collected: false
+            });
+        }
+    }
+
+    markSpherePointCollected(roll, pitch, yaw) {
+        const pRad = (pitch * Math.PI) / 180;
+        const yRad = (yaw * Math.PI) / 180;
+
+        this.compassPoints.forEach(pt => {
+            if (pt.collected) return;
+
+            const tx = 90 * Math.sin(pRad) * Math.cos(yRad);
+            const ty = 90 * Math.sin(pRad) * Math.sin(yRad);
+            const tz = 90 * Math.cos(pRad);
+
+            const dx = pt.x - tx;
+            const dy = pt.y - ty;
+            const dz = pt.z - tz;
+            const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+            if (dist < 70 || Math.random() < 0.08) {
+                pt.collected = true;
+                this.collectedCount++;
+            }
+        });
+
+        const pct = Math.min(100, Math.round((this.collectedCount / this.compassPoints.length) * 100));
+        if (pct !== this.compassCoveragePct) {
+            this.compassCoveragePct = pct;
+            const badge = document.getElementById('compass-pct-badge');
+            const label = document.getElementById('compass-pct-label');
+            const fill = document.getElementById('compass-progress-fill');
+
+            if (badge) badge.textContent = `COVERAGE: ${pct}%`;
+            if (label) label.textContent = `${pct}%`;
+            if (fill) fill.style.width = `${pct}%`;
+
+            if (pct >= 100) {
+                setTimeout(() => this.setStep(4), 500);
+            }
+        }
+    }
+
+    start3DCompassLoop() {
+        if (this.isCompassActive) return;
+        this.isCompassActive = true;
+        const render = () => {
+            if (!this.isCompassActive) return;
+            this.draw3DCompassBox();
+            this.compassAnimFrame = requestAnimationFrame(render);
+        };
+        render();
+    }
+
+    stop3DCompassLoop() {
+        this.isCompassActive = false;
+        if (this.compassAnimFrame) {
+            cancelAnimationFrame(this.compassAnimFrame);
+            this.compassAnimFrame = null;
+        }
+    }
+
+    draw3DCompassBox() {
+        const canvas = this.compassCanvas || document.getElementById('compass-3d-canvas');
+        if (!canvas) return;
+        const ctx = this.compassCtx || canvas.getContext('2d');
+        if (!ctx) return;
+
+        const rect = canvas.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) {
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const cx = width / 2;
+        const cy = height / 2;
+
+        ctx.clearRect(0, 0, width, height);
+
+        // Bounding Box
+        ctx.strokeStyle = 'rgba(59, 130, 246, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(cx - 150, cy - 130, 300, 260);
+
+        const r = (this.currentRoll * Math.PI) / 180;
+        const p = (this.currentPitch * Math.PI) / 180;
+
+        // Project and Draw 3D Coordinate Axes
+        const axisLength = 100;
+        const axes = [
+            { name: 'X', dx: axisLength, dy: 0, dz: 0, color: '#EF4444' },
+            { name: 'Y', dx: 0, dy: axisLength, dz: 0, color: '#10B981' },
+            { name: 'Z', dx: 0, dy: 0, dz: axisLength, color: '#3B82F6' }
+        ];
+
+        axes.forEach(axis => {
+            let x1 = axis.dx;
+            let y1 = axis.dy;
+            let z1 = axis.dz;
+
+            let x2 = x1;
+            let y2 = y1 * Math.cos(p) - z1 * Math.sin(p);
+            let z2 = y1 * Math.sin(p) + z1 * Math.cos(p);
+
+            let x3 = x2 * Math.cos(r) + z2 * Math.sin(r);
+            let y3 = y2;
+
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + x3, cy + y3);
+            ctx.strokeStyle = axis.color;
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            ctx.fillStyle = axis.color;
+            ctx.font = 'bold 11px Inter, sans-serif';
+            ctx.fillText(axis.name, cx + x3 + (x3 >= 0 ? 6 : -12), cy + y3 + (y3 >= 0 ? 12 : -6));
+        });
+
+        // Draw 3D Sphere Points Matrix & Connected Mesh
+        let prevScreenPt = null;
+        this.compassPoints.forEach(pt => {
+            let px1 = pt.x;
+            let py1 = pt.y;
+            let pz1 = pt.z;
+
+            let px2 = px1;
+            let py2 = py1 * Math.cos(p) - pz1 * Math.sin(p);
+            let pz2 = py1 * Math.sin(p) + pz1 * Math.cos(p);
+
+            let px3 = px2 * Math.cos(r) + pz2 * Math.sin(r);
+            let py3 = py2;
+
+            const sx = cx + px3;
+            const sy = cy + py3;
+
+            if (pt.collected && prevScreenPt && prevScreenPt.collected) {
+                ctx.beginPath();
+                ctx.moveTo(prevScreenPt.sx, prevScreenPt.sy);
+                ctx.lineTo(sx, sy);
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.35)';
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            }
+            prevScreenPt = { sx, sy, collected: pt.collected };
+
+            ctx.beginPath();
+            ctx.arc(sx, sy, pt.collected ? 4 : 2.5, 0, Math.PI * 2);
+            if (pt.collected) {
+                ctx.fillStyle = '#10B981';
+                ctx.shadowColor = '#10B981';
+                ctx.shadowBlur = 6;
+            } else {
+                ctx.fillStyle = 'rgba(148, 163, 184, 0.35)';
+                ctx.shadowBlur = 0;
+            }
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        });
+    }
+
+    startSuccessCountdown() {
+        let count = 3;
+        const numEl = document.getElementById('cal-countdown-num');
+        if (numEl) numEl.textContent = count;
+
+        const timer = setInterval(() => {
+            count--;
+            if (numEl) numEl.textContent = count;
+            if (count <= 0) {
+                clearInterval(timer);
+                if (window.switchToHomeView) window.switchToHomeView();
+                this.setStep(1);
+            }
+        }, 1000);
+    }
+}

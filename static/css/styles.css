@@ -1649,6 +1649,488 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     transition: all 0.2s ease;
 }
 
+/* ==========================================================================
+   Calibration Wizard Module Styles
+   ========================================================================== */
+.cal-wizard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.cal-header {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    box-shadow: var(--shadow-card);
+}
+
+.cal-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cal-title {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.cal-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Steps Progress Bar */
+.cal-steps-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cal-step-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-pill);
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: all 0.3s ease;
+}
+
+.cal-step-pill .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(148, 163, 184, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+}
+
+.cal-step-pill.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.cal-step-pill.active .step-num {
+    background: var(--primary);
+    color: #FFFFFF;
+}
+
+.cal-step-pill.completed {
+    background: rgba(16, 185, 129, 0.15);
+    border-color: #10B981;
+    color: #10B981;
+}
+
+.cal-step-pill.completed .step-num {
+    background: #10B981;
+    color: #FFFFFF;
+}
+
+.step-connector {
+    width: 24px;
+    height: 2px;
+    background: var(--border-color);
+}
+
+/* Calibration Panes Grid */
+.cal-pane {
+    display: none;
+}
+
+.cal-pane.active {
+    display: block;
+}
+
+.cal-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.cal-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.cal-pfd-height {
+    height: 420px;
+    position: relative;
+}
+
+.cal-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    height: 100%;
+}
+
+.cal-body.center-content {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-label {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+    letter-spacing: 0.6px;
+}
+
+/* Frame Vector Diagram Preview */
+.frame-diagram-box {
+    background: #040711;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 230px;
+}
+
+.diagram-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.diagram-canvas {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cal-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.cal-action-row.full-width {
+    width: 100%;
+}
+
+/* 6-Position Accel Setup Cards */
+.accel-orient-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    padding: 1rem;
+}
+
+.orient-card {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    transition: all 0.2s ease;
+}
+
+.orient-card.active {
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+}
+
+.orient-card.completed {
+    border-color: #10B981;
+    background: rgba(16, 185, 129, 0.08);
+}
+
+.orient-icon {
+    font-size: 1.5rem;
+}
+
+.orient-name {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.orient-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.orient-status {
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: fit-content;
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-muted);
+}
+
+.orient-card.active .orient-status {
+    background: rgba(59, 130, 246, 0.2);
+    color: var(--primary);
+}
+
+.orient-card.completed .orient-status {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10B981;
+}
+
+.target-orient-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.target-icon-lg {
+    font-size: 3rem;
+}
+
+.target-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.target-desc {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    max-width: 400px;
+}
+
+.live-orient-telemetry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.telemetry-chip {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.chip-lbl {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.chip-val {
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+/* 3D Compass Box */
+.compass-3d-box {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    background: #020409;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.compass-3d-box canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.axis-overlay-legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.axis-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: #FFFFFF;
+}
+
+.axis-x { background: #EF4444; }
+.axis-y { background: #10B981; }
+.axis-z { background: #3B82F6; }
+
+.progress-container-lg {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.progress-pct-text {
+    color: var(--primary);
+    font-family: var(--font-mono);
+}
+
+.progress-bar-track {
+    width: 100%;
+    height: 14px;
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: 7px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6, #10B981);
+    border-radius: 7px;
+    transition: width 0.3s ease;
+}
+
+.rotation-guide-card {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 450px;
+}
+
+.guide-icon {
+    font-size: 2.2rem;
+}
+
+.cal-telemetry-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.stat-mini-box {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-mini-box .lbl {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.stat-mini-box .val {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--primary);
+}
+
+/* Success Banner */
+.success-banner-card {
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1.25rem;
+    max-width: 700px;
+    margin: 2rem auto;
+}
+
+.success-icon-wrap {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.15);
+    border: 2px solid #10B981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+}
+
+.success-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 800;
+    color: #10B981;
+}
+
+.success-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.redirect-countdown-box {
+    background: var(--bg-page);
+    border: 1px solid var(--border-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
 .btn-icon-subtle:hover {
     background: var(--primary-light);
     border-color: var(--primary);

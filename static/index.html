@@ -46,6 +46,10 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                     <span>Full Inspector</span>
                 </button>
+                <button id="nav-item-calibration" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+                    <span>Calibration</span>
+                </button>
             </div>
 
             <div id="btn-brand-home" class="brand-logo-wrap" title="Return to Home Overview">
@@ -173,6 +177,23 @@
                             <div class="home-stat-chip">EKF & IMU</div>
                         </div>
                         <button id="btn-home-inspector" class="btn btn-primary btn-sm btn-block">Explore Full Inspector →</button>
+                    </div>
+
+                    <!-- Card 4: Calibration -->
+                    <div id="card-home-calibration" class="home-card home-card-sm" title="Launch Calibration Wizard">
+                        <div class="home-card-header">
+                            <div class="home-card-icon icon-amber">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/></svg>
+                            </div>
+                            <span class="home-card-badge badge-amber">FRAME & SENSORS</span>
+                        </div>
+                        <h2 class="home-card-title">Calibration</h2>
+                        <p class="home-card-desc">Interactive APM board wizard for Frame Installation, 6-Axis Accelerometer Alignment, and 3D Compass Magnetometer Sphere Calibration.</p>
+                        <div class="home-card-stats">
+                            <div class="home-stat-chip">6-Pos Accel</div>
+                            <div class="home-stat-chip">3D Axis Sphere</div>
+                        </div>
+                        <button id="btn-home-calibration" class="btn btn-primary btn-sm btn-block">Launch Calibration Wizard →</button>
                     </div>
                 </div>
             </div>
@@ -521,6 +542,261 @@
 
                             <div id="vlc-status-toast" class="vlc-toast-banner" style="display: none;"></div>
                         </div>
+        <!-- Page View 4: Calibration Wizard ("Calibration") -->
+        <div id="view-calibration" class="page-view">
+            <div class="cal-wizard-container">
+                <!-- Header & Multi-Step Progress Bar -->
+                <div class="cal-header">
+                    <div class="cal-title-wrap">
+                        <h1 class="cal-title">APM Hardware & Sensor Calibration Wizard</h1>
+                        <p class="cal-subtitle">Real-Time Telemetry Guided Setup: Frame Installation • 6-Position Accel • 3D Compass Sphere</p>
+                    </div>
+                    
+                    <!-- Progress Steps Indicator Bar -->
+                    <div class="cal-steps-bar">
+                        <div id="cal-step-pill-1" class="cal-step-pill active">
+                            <span class="step-num">1</span>
+                            <span class="step-text">Frame Install</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div id="cal-step-pill-2" class="cal-step-pill">
+                            <span class="step-num">2</span>
+                            <span class="step-text">6-Pos Accel</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div id="cal-step-pill-3" class="cal-step-pill">
+                            <span class="step-num">3</span>
+                            <span class="step-text">3D Compass Box</span>
+                        </div>
+                        <div class="step-connector"></div>
+                        <div id="cal-step-pill-4" class="cal-step-pill">
+                            <span class="step-num">4</span>
+                            <span class="step-text">Complete</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 1 Pane: Frame Selection & PFD -->
+                <div id="cal-pane-step-1" class="cal-pane active">
+                    <div class="cal-grid-2col">
+                        <!-- Left: PFD Canvas & Live Telemetry Attitude -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Primary Flight Display (Live Telemetry)</h3>
+                                <span class="pill-badge pill-connected">LIVE PFD</span>
+                            </div>
+                            <div class="pfd-container cal-pfd-height">
+                                <canvas id="cal-attitude-canvas"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right: Frame Configuration & Vector Diagram -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Select & Install Frame Type</h3>
+                            </div>
+                            <div class="cal-body">
+                                <div class="form-group">
+                                    <label class="form-label">CHOOSE DRONE FRAME CLASS / TYPE</label>
+                                    <select id="cal-frame-select" class="saas-select-full">
+                                        <option value="quad_x" selected>🛸 Quadrotor X (Class 1, Type 1 - Standard)</option>
+                                        <option value="quad_plus">➕ Quadrotor Plus (Class 1, Type 0)</option>
+                                        <option value="hexa_x">🛑 Hexarotor X (Class 2, Type 1)</option>
+                                        <option value="octo_x">⚙️ Octorotor X (Class 3, Type 1)</option>
+                                        <option value="plane">✈️ Fixed Wing Aircraft / Plane</option>
+                                        <option value="vtol">🦅 VTOL Tilt-Rotor / Tailsitter</option>
+                                    </select>
+                                </div>
+
+                                <!-- Motor / Arm Diagram Preview -->
+                                <div class="frame-diagram-box">
+                                    <div class="diagram-title" id="cal-frame-diagram-title">Quadrotor X Motor Vector Diagram</div>
+                                    <div id="cal-frame-diagram-container" class="diagram-canvas">
+                                        <!-- SVG Motor Arms dynamically rendered by JS -->
+                                    </div>
+                                </div>
+
+                                <div class="cal-action-row">
+                                    <button id="btn-install-frame" class="btn btn-primary">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                                        <span>INSTALL FRAME TYPE</span>
+                                    </button>
+                                    <button id="btn-goto-step-2" class="btn btn-success">
+                                        <span>PROCEED TO ACCEL CALIBRATION →</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 Pane: 6-Position Accelerometer Calibration -->
+                <div id="cal-pane-step-2" class="cal-pane">
+                    <div class="cal-grid-2col">
+                        <!-- Left: 6 Position Target Cards -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">6-Position APM Board Orientation Setup</h3>
+                                <span id="accel-step-badge" class="pill-badge pill-connected">POSITION 1 OF 6</span>
+                            </div>
+                            <div class="accel-orient-grid">
+                                <div id="pos-card-level" class="orient-card active">
+                                    <div class="orient-icon">⬛</div>
+                                    <div class="orient-name">1. LEVEL (FLAT)</div>
+                                    <div class="orient-desc">Place board level & flat</div>
+                                    <span class="orient-status status-active">READY</span>
+                                </div>
+                                <div id="pos-card-left" class="orient-card">
+                                    <div class="orient-icon">◀️</div>
+                                    <div class="orient-name">2. LEFT SIDE</div>
+                                    <div class="orient-desc">Rotate on left edge</div>
+                                    <span class="orient-status">WAITING</span>
+                                </div>
+                                <div id="pos-card-right" class="orient-card">
+                                    <div class="orient-icon">▶️</div>
+                                    <div class="orient-name">3. RIGHT SIDE</div>
+                                    <div class="orient-desc">Rotate on right edge</div>
+                                    <span class="orient-status">WAITING</span>
+                                </div>
+                                <div id="pos-card-down" class="orient-card">
+                                    <div class="orient-icon">🔽</div>
+                                    <div class="orient-name">4. NOSE DOWN</div>
+                                    <div class="orient-desc">Point nose vertically down</div>
+                                    <span class="orient-status">WAITING</span>
+                                </div>
+                                <div id="pos-card-up" class="orient-card">
+                                    <div class="orient-icon">🔼</div>
+                                    <div class="orient-name">5. NOSE UP</div>
+                                    <div class="orient-desc">Point nose vertically up</div>
+                                    <span class="orient-status">WAITING</span>
+                                </div>
+                                <div id="pos-card-back" class="orient-card">
+                                    <div class="orient-icon">🔄</div>
+                                    <div class="orient-name">6. BACK (INVERTED)</div>
+                                    <div class="orient-desc">Flip board upside down</div>
+                                    <span class="orient-status">WAITING</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Active Orientation Guide & Live Telemetry Check -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Live Orientation Alignment & Capture</h3>
+                            </div>
+                            <div class="cal-body center-content">
+                                <div class="target-orient-box">
+                                    <div id="target-orient-icon" class="target-icon-lg">📏</div>
+                                    <h2 id="target-orient-title" class="target-title">1. Place Vehicle LEVEL (Flat)</h2>
+                                    <p id="target-orient-instructions" class="target-desc">Ensure the APM board is resting on a level, stationary surface. Hold still and press Confirm.</p>
+                                </div>
+
+                                <!-- Live Telemetry Attitude Readout -->
+                                <div class="live-orient-telemetry">
+                                    <div class="telemetry-chip">
+                                        <span class="chip-lbl">Roll</span>
+                                        <span id="cal-live-roll" class="chip-val">0.0°</span>
+                                    </div>
+                                    <div class="telemetry-chip">
+                                        <span class="chip-lbl">Pitch</span>
+                                        <span id="cal-live-pitch" class="chip-val">0.0°</span>
+                                    </div>
+                                    <div class="telemetry-chip">
+                                        <span class="chip-lbl">Orientation</span>
+                                        <span id="cal-live-orient-label" class="chip-val text-emerald">LEVEL</span>
+                                    </div>
+                                </div>
+
+                                <div class="cal-action-row full-width">
+                                    <button id="btn-confirm-accel-pos" class="btn btn-primary btn-lg">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                                        <span>CONFIRM POSITION & CAPTURE SAMPLE</span>
+                                    </button>
+                                    <button id="btn-goto-step-3" class="btn btn-success btn-lg" style="display: none;">
+                                        <span>PROCEED TO COMPASS CALIBRATION →</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 Pane: 3D Compass Calibration Box & Point Cloud -->
+                <div id="cal-pane-step-3" class="cal-pane">
+                    <div class="cal-grid-2col">
+                        <!-- Left: 3D Canvas Box with XYZ Coordinate Axis & Spherical Point Matrix -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">3D Compass Axis Box & Real-Time Point Cloud</h3>
+                                <span id="compass-pct-badge" class="pill-badge pill-connected">COVERAGE: 0%</span>
+                            </div>
+                            <div class="compass-3d-box">
+                                <canvas id="compass-3d-canvas"></canvas>
+                                <div class="axis-overlay-legend">
+                                    <span class="axis-tag axis-x">X AXIS (Roll)</span>
+                                    <span class="axis-tag axis-y">Y AXIS (Pitch)</span>
+                                    <span class="axis-tag axis-z">Z AXIS (Yaw)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Live Calibration Progress & Rotation Guide -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Real-Time Board Rotation Progress</h3>
+                            </div>
+                            <div class="cal-body center-content">
+                                <div class="progress-container-lg">
+                                    <div class="progress-header">
+                                        <span>COMPASS SPHERE SAMPLING</span>
+                                        <span id="compass-pct-label" class="progress-pct-text">0%</span>
+                                    </div>
+                                    <div class="progress-bar-track">
+                                        <div id="compass-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+                                    </div>
+                                </div>
+
+                                <div class="rotation-guide-card">
+                                    <div class="guide-icon">🔄</div>
+                                    <h3>Slowly Rotate APM Board Around All Axes</h3>
+                                    <p>Rotate the vehicle in 360-degree motions along Roll, Pitch, and Yaw. Points inside the 3D axis box light up and join together as live telemetry rotates!</p>
+                                </div>
+
+                                <div class="cal-telemetry-row">
+                                    <div class="stat-mini-box">
+                                        <span class="lbl">Mag X</span>
+                                        <span id="cal-mag-x" class="val">+124</span>
+                                    </div>
+                                    <div class="stat-mini-box">
+                                        <span class="lbl">Mag Y</span>
+                                        <span id="cal-mag-y" class="val">-45</span>
+                                    </div>
+                                    <div class="stat-mini-box">
+                                        <span class="lbl">Mag Z</span>
+                                        <span id="cal-mag-z" class="val">+310</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 Pane: Calibration Success Celebration -->
+                <div id="cal-pane-step-4" class="cal-pane">
+                    <div class="card cal-card success-banner-card">
+                        <div class="success-icon-wrap">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </div>
+                        <h1 class="success-title">CALIBRATION SUCCESSFUL! 🎉</h1>
+                        <p class="success-desc">Frame Configuration, Accelerometer 6-Axis, and 3D Compass Sphere offsets have been calculated and saved to APM memory.</p>
+
+                        <div class="redirect-countdown-box">
+                            <span>Redirecting to Home Overview in <b id="cal-countdown-num">3</b> seconds...</span>
+                        </div>
+
+                        <button id="btn-return-home-now" class="btn btn-primary btn-lg">
+                            <span>RETURN TO HOME OVERVIEW NOW →</span>
+                        </button>
                     </div>
                 </div>
             </div>

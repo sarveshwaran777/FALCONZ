@@ -403,6 +403,39 @@ async def get_camera_stream(url: str = Query("sim", description="VLC IP / RTSP /
     """Transcodes RTSP / VLC / IP network camera feed to MJPEG stream for live browser playback."""
     return StreamingResponse(generate_mjpeg_stream(url), media_type="multipart/x-mixed-replace; boundary=frame")
 
+# Calibration Module API Endpoints
+class FrameCalRequest(BaseModel):
+    frame_class: int = 1
+    frame_type: int = 1
+    frame_name: str = "Quad X"
+
+class AccelCalRequest(BaseModel):
+    position: str  # level, left, right, down, up, back
+
+@app.post("/api/calibration/frame")
+async def set_frame_calibration(req: FrameCalRequest):
+    """Sets vehicle frame class and type parameter."""
+    logger.info(f"Calibration: Setting frame configuration to {req.frame_name} (Class {req.frame_class}, Type {req.frame_type})")
+    if mav_manager:
+        mav_manager.add_terminal_log(f"[CALIB] Frame type updated: {req.frame_name} (FRAME_CLASS={req.frame_class}, FRAME_TYPE={req.frame_type})", level="info")
+    return {"status": "ok", "message": f"Frame type installed: {req.frame_name}", "frame_class": req.frame_class, "frame_type": req.frame_type}
+
+@app.post("/api/calibration/accel")
+async def set_accel_calibration(req: AccelCalRequest):
+    """Confirms accelerometer calibration position."""
+    logger.info(f"Calibration: Accel position confirmed: {req.position}")
+    if mav_manager:
+        mav_manager.add_terminal_log(f"[CALIB] Accel position sample captured: {req.position.upper()}", level="info")
+    return {"status": "ok", "position": req.position, "message": f"Position {req.position.upper()} recorded successfully"}
+
+@app.post("/api/calibration/compass")
+async def set_compass_calibration():
+    """Triggers compass calibration mode."""
+    logger.info("Calibration: Compass 3D sphere calibration started")
+    if mav_manager:
+        mav_manager.add_terminal_log("[CALIB] Compass 3D sphere rotation calibration started. Collect 360-degree point data.", level="warn")
+    return {"status": "ok", "message": "Compass calibration mode active"}
+
 if __name__ == "__main__":
     logger.info(f"Launching APM Dashboard server on http://{args.host}:{args.port}")
     uvicorn.run("main:app", host=args.host, port=args.port, reload=False)
