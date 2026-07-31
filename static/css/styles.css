@@ -1876,7 +1876,9 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 .cal-card {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: space-between;
+    height: 100% !important;
+    overflow: hidden !important;
 }
 
 .cal-pfd-height {
@@ -1885,16 +1887,18 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 .cal-body {
-    padding: 1.25rem;
+    padding: 0.75rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    height: 100%;
+    gap: 0.5rem;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden !important;
 }
 
 .cal-body.center-content {
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     text-align: center;
 }
 
@@ -1916,13 +1920,14 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     background: #040711;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
-    padding: 1rem;
+    padding: 0.75rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    min-height: 230px;
+    gap: 0.5rem;
+    min-height: 180px;
+    flex: 1;
 }
 
 .diagram-title {
@@ -1933,7 +1938,7 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 
 .diagram-canvas {
     width: 100%;
-    height: 180px;
+    height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1944,7 +1949,12 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
+    padding: 0.65rem 1.25rem;
+    background: #0B1021;
+    border-top: 1px solid var(--border-color);
     margin-top: auto;
+    flex-shrink: 0 !important;
+    z-index: 10;
 }
 
 .cal-action-row.full-width {
