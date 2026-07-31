@@ -484,6 +484,15 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     height: 100%;
 }
 
+.page-view.active,
+#view-calibration.active {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
 /* WebGL Orb Component Styling */
 .orb-wrapper {
     position: absolute;
