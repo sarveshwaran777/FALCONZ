@@ -974,18 +974,28 @@
                                 <div class="cal-body center-content">
                                     <div class="progress-container-lg">
                                         <div class="progress-header">
-                                            <span>COMPASS SPHERE SAMPLING</span>
-                                            <span id="compass-pct-label" class="progress-pct-text">0%</span>
+                                            <span>3D AXIS DOTS CONNECTION</span>
+                                            <span id="compass-pct-label" class="progress-pct-text">0 / 10 Dots Connected (0%)</span>
                                         </div>
                                         <div class="progress-bar-track">
                                             <div id="compass-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
                                         </div>
                                     </div>
 
-                                    <div class="rotation-guide-card">
+                                    <!-- 3D Axis Visualizer Box (Matching Uploaded ArduPilot MP Image) -->
+                                    <div class="compass-3d-box">
+                                        <canvas id="compass-3d-canvas" width="600" height="280"></canvas>
+                                        <div class="axis-overlay-legend">
+                                            <span class="axis-tag axis-x">X AXIS (RED/MAGENTA)</span>
+                                            <span class="axis-tag axis-y">Y AXIS (GREEN/CYAN)</span>
+                                            <span class="axis-tag axis-z">Z AXIS (BLUE/YELLOW)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="rotation-guide-card" style="margin-top: 0.85rem;">
                                         <div class="guide-icon">🔄</div>
-                                        <h3>Slowly Rotate APM Board Around All Axes</h3>
-                                        <p>Rotate the vehicle in 360-degree motions along Roll, Pitch, and Yaw. Points inside the 3D axis box light up and join together as live telemetry rotates!</p>
+                                        <h3>Rotate APM Board to Connect 10 Axis Dots</h3>
+                                        <p>Move the board around all axes. As the red marker passes target dots along the 3D axis lines, they connect sequentially. When 10 dots are connected, X Y Z offsets are displayed and calibration completes automatically!</p>
                                     </div>
 
                                     <div class="cal-telemetry-row">
