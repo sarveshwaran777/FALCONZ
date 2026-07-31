@@ -2112,15 +2112,35 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 .compass-3d-box {
     position: relative;
     width: 100%;
-    height: 320px;
-    background: #000000;
+    height: 380px !important;
+    min-height: 380px !important;
+    background: #000000 !important;
+    border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     overflow: hidden;
+    margin-bottom: 0.75rem;
 }
 
 .compass-3d-box canvas {
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    background: #000000 !important;
+}
+
+.compass-guide-overlay {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #60A5FA;
+    backdrop-filter: blur(4px);
+    z-index: 10;
 }
 
 .axis-overlay-legend {

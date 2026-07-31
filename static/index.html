@@ -984,21 +984,18 @@
 
                                     <!-- Single 3D Axis Visualizer Box -->
                                     <div class="compass-3d-box">
-                                        <canvas id="compass-3d-canvas" width="600" height="340"></canvas>
+                                        <canvas id="compass-3d-canvas"></canvas>
                                         <div class="axis-overlay-legend">
                                             <span class="axis-tag axis-x">X AXIS (RED/MAGENTA)</span>
                                             <span class="axis-tag axis-y">Y AXIS (GREEN/CYAN)</span>
                                             <span class="axis-tag axis-z">Z AXIS (BLUE/YELLOW)</span>
                                         </div>
+                                        <div id="compass-status-guide" class="compass-guide-overlay">
+                                            ⚡ Rotate board manually or drag 3D canvas to connect all 10 dots
+                                        </div>
                                     </div>
 
-                                    <div class="rotation-guide-card" style="margin-top: 0.85rem;">
-                                        <div class="guide-icon">🔄</div>
-                                        <h3>Rotate Board Manually to Connect 10 Axis Dots</h3>
-                                        <p id="compass-status-guide">Clean 3D axis graph initialized. Target dots will appear in 2 seconds. Move/rotate the board around all axes to manually connect all 10 dots!</p>
-                                    </div>
-
-                                    <div class="cal-telemetry-row" style="margin-top: 0.85rem;">
+                                    <div class="cal-telemetry-row">
                                         <div class="stat-mini-box">
                                             <span class="lbl">Mag X</span>
                                             <span id="cal-mag-x" class="val">+124</span>
@@ -1117,10 +1114,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/orb.js?v=4.0.0"></script>
-    <script src="/static/js/attitude_indicator.js?v=4.0.0"></script>
-    <script src="/static/js/telemetry_inspector.js?v=4.0.0"></script>
-    <script src="/static/js/map.js?v=4.0.0"></script>
-    <script src="/static/js/app.js?v=4.0.0"></script>
+    <script src="/static/js/orb.js?v=5.0.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=5.0.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=5.0.0"></script>
+    <script src="/static/js/map.js?v=5.0.0"></script>
+    <script src="/static/js/app.js?v=5.0.0"></script>
 </body>
 </html>
