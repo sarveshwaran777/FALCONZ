@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <!-- Custom Modern SaaS GCS Stylesheet -->
-    <link rel="stylesheet" href="/static/css/styles.css?v=11.0.0">
+    <link rel="stylesheet" href="/static/css/styles.css?v=12.0.0">
 </head>
 <body class="saas-body">
 
@@ -942,7 +942,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 3 Pane: 3D Compass Box & Rotation Progress -->
+                        <!-- Step 3 Pane: 3D Compass Box & Rotation Progress (Side-by-Side Split) -->
                         <div id="cal-pane-step-3" class="cal-pane">
                             <div class="card cal-card flex-col-between">
                                 <div class="card-header">
@@ -953,42 +953,49 @@
                                     <span class="badge badge-info">STEP 3 OF 3</span>
                                 </div>
 
-                                <div class="cal-body center-content">
-                                    <div class="progress-container-lg">
-                                        <div class="progress-header">
-                                            <span>3D AXIS DOTS CONNECTION</span>
-                                            <span id="compass-pct-label" class="progress-pct-text">0 / 10 Dots Connected (0%)</span>
+                                <div class="cal-body">
+                                    <div class="compass-split-grid">
+                                        <!-- Left Side: 3D Graph Box -->
+                                        <div class="compass-3d-box">
+                                            <canvas id="compass-3d-canvas"></canvas>
+                                            <div class="axis-overlay-legend">
+                                                <span class="axis-tag axis-x">X AXIS (RED/MAGENTA)</span>
+                                                <span class="axis-tag axis-y">Y AXIS (GREEN/CYAN)</span>
+                                                <span class="axis-tag axis-z">Z AXIS (BLUE/YELLOW)</span>
+                                            </div>
                                         </div>
-                                        <div class="progress-bar-track">
-                                            <div id="compass-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
-                                        </div>
-                                    </div>
 
-                                    <!-- Single 3D Axis Visualizer Box -->
-                                    <div class="compass-3d-box">
-                                        <canvas id="compass-3d-canvas"></canvas>
-                                        <div class="axis-overlay-legend">
-                                            <span class="axis-tag axis-x">X AXIS (RED/MAGENTA)</span>
-                                            <span class="axis-tag axis-y">Y AXIS (GREEN/CYAN)</span>
-                                            <span class="axis-tag axis-z">Z AXIS (BLUE/YELLOW)</span>
-                                        </div>
-                                        <div id="compass-status-guide" class="compass-guide-overlay">
-                                            ⚡ Rotate board manually or drag 3D canvas to connect all 10 dots
-                                        </div>
-                                    </div>
+                                        <!-- Right Side: Dots Connection Progress & XYZ Values -->
+                                        <div class="compass-metrics-panel">
+                                            <div class="progress-container-lg">
+                                                <div class="progress-header">
+                                                    <span>3D AXIS DOTS CONNECTION</span>
+                                                    <span id="compass-pct-label" class="progress-pct-text">0 / 10 Dots Connected (0%)</span>
+                                                </div>
+                                                <div class="progress-bar-track">
+                                                    <div id="compass-progress-fill" class="progress-bar-fill" style="width: 0%"></div>
+                                                </div>
+                                            </div>
 
-                                    <div class="cal-telemetry-row">
-                                        <div class="stat-mini-box">
-                                            <span class="lbl">Mag X</span>
-                                            <span id="cal-mag-x" class="val">+124</span>
-                                        </div>
-                                        <div class="stat-mini-box">
-                                            <span class="lbl">Mag Y</span>
-                                            <span id="cal-mag-y" class="val">-45</span>
-                                        </div>
-                                        <div class="stat-mini-box">
-                                            <span class="lbl">Mag Z</span>
-                                            <span id="cal-mag-z" class="val">+310</span>
+                                            <div class="cal-status-guide-box" id="compass-status-guide">
+                                                <span>⚡ Target dots active! Rotate board manually or drag 3D canvas to connect all 10 dots.</span>
+                                            </div>
+
+                                            <div class="xyz-title-label">CALCULATED MAGNETOMETER OFFSET VALUES (mG)</div>
+                                            <div class="cal-telemetry-row">
+                                                <div class="stat-mini-box">
+                                                    <span class="lbl">Mag X</span>
+                                                    <span id="cal-mag-x" class="val">+124</span>
+                                                </div>
+                                                <div class="stat-mini-box">
+                                                    <span class="lbl">Mag Y</span>
+                                                    <span id="cal-mag-y" class="val">-45</span>
+                                                </div>
+                                                <div class="stat-mini-box">
+                                                    <span class="lbl">Mag Z</span>
+                                                    <span id="cal-mag-z" class="val">+310</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1096,10 +1103,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/orb.js?v=11.0.0"></script>
-    <script src="/static/js/attitude_indicator.js?v=11.0.0"></script>
-    <script src="/static/js/telemetry_inspector.js?v=11.0.0"></script>
-    <script src="/static/js/map.js?v=11.0.0"></script>
-    <script src="/static/js/app.js?v=11.0.0"></script>
+    <script src="/static/js/orb.js?v=12.0.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=12.0.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=12.0.0"></script>
+    <script src="/static/js/map.js?v=12.0.0"></script>
+    <script src="/static/js/app.js?v=12.0.0"></script>
 </body>
 </html>
