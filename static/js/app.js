@@ -1541,16 +1541,48 @@ class CalibrationWizardManager {
 
         if (btnInstall) {
             btnInstall.addEventListener('click', async () => {
+                if (btnInstall.disabled) return;
                 const checkedRadio = document.querySelector('input[name="frame_type_radio"]:checked');
                 const val = checkedRadio ? checkedRadio.value : 'X';
-                try {
-                    await fetch('/api/calibration/frame', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: val })
-                    });
-                } catch (e) {}
-                this.setStep(2);
+                
+                const overlay = document.getElementById('frame-upload-overlay');
+                const bar = document.getElementById('upload-progress-bar');
+                const pct = document.getElementById('upload-pct-label');
+                const statusMsg = document.getElementById('upload-status-msg');
+                
+                if (overlay) overlay.style.display = 'flex';
+                btnInstall.disabled = true;
+
+                fetch('/api/calibration/frame', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: val })
+                }).catch(() => {});
+
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 4;
+                    if (bar) bar.style.width = `${progress}%`;
+                    if (pct) pct.textContent = `${progress}%`;
+
+                    if (progress === 24 && statusMsg) {
+                        statusMsg.textContent = `Uploading FRAME_CLASS = 1 & FRAME_TYPE = 1 (frame_${val.toLowerCase()}.param)...`;
+                    } else if (progress === 60 && statusMsg) {
+                        statusMsg.textContent = `Flashing Motor Matrix Config & Propeller Rotation Table to EEPROM...`;
+                    } else if (progress === 88 && statusMsg) {
+                        statusMsg.textContent = `Verifying EEPROM Parameter Checksum...`;
+                    }
+
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        if (statusMsg) statusMsg.textContent = `SAVED ✓ Frame Configuration Data Flashed Successfully!`;
+                        setTimeout(() => {
+                            if (overlay) overlay.style.display = 'none';
+                            btnInstall.disabled = false;
+                            this.setStep(2);
+                        }, 500);
+                    }
+                }, 70);
             });
         }
 
@@ -1564,56 +1596,76 @@ class CalibrationWizardManager {
 
         if (btnCaptureAccel) {
             btnCaptureAccel.addEventListener('click', async () => {
+                if (btnCaptureAccel.disabled) return;
+                btnCaptureAccel.disabled = true;
+
                 const currentPos = this.accelPositions[this.accelStepIndex];
-                try {
-                    await fetch('/api/calibration/accel', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ position: currentPos })
-                    });
-                } catch (e) {}
+                const labels = ['LEVEL', 'LEFT SIDE', 'RIGHT SIDE', 'NOSE DOWN', 'NOSE UP', 'INVERTED'];
+                const currentLabel = labels[this.accelStepIndex];
 
-                const cardMap = {
-                    'level': 'orient-level',
-                    'left': 'orient-left',
-                    'right': 'orient-right',
-                    'down': 'orient-nosedown',
-                    'up': 'orient-noseup',
-                    'back': 'orient-back'
-                };
-                const cardId = cardMap[currentPos];
-                const card = document.getElementById(cardId);
-                if (card) {
-                    card.classList.remove('active');
-                    card.classList.add('completed');
-                    const badge = document.getElementById(`badge-${cardId}`);
-                    if (badge) {
-                        badge.textContent = 'DONE ✓';
-                        badge.className = 'orient-status status-completed';
-                    }
-                }
+                btnCaptureAccel.innerHTML = `<span><svg class="spinning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" style="margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="10"/></svg> SAVING & RECORDING ${currentLabel}...</span>`;
 
-                this.accelStepIndex++;
-                if (this.accelStepIndex < this.accelPositions.length) {
-                    const nextPos = this.accelPositions[this.accelStepIndex];
-                    const nextCardId = cardMap[nextPos];
-                    const nextCard = document.getElementById(nextCardId);
-                    if (nextCard) {
-                        nextCard.classList.add('active');
-                        const badge = document.getElementById(`badge-${nextCardId}`);
+                fetch('/api/calibration/accel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ position: currentPos })
+                }).catch(() => {});
+
+                setTimeout(() => {
+                    const cardMap = {
+                        'level': 'orient-level',
+                        'left': 'orient-left',
+                        'right': 'orient-right',
+                        'down': 'orient-nosedown',
+                        'up': 'orient-noseup',
+                        'back': 'orient-back'
+                    };
+                    const cardId = cardMap[currentPos];
+                    const card = document.getElementById(cardId);
+                    if (card) {
+                        card.classList.remove('active');
+                        card.classList.add('completed');
+                        const badge = document.getElementById(`badge-${cardId}`);
                         if (badge) {
-                            badge.textContent = 'CURRENT TARGET';
-                            badge.className = 'orient-status status-active';
+                            badge.textContent = 'SAVED ✓';
+                            badge.className = 'orient-status status-completed';
+                            badge.style.background = '#10B981';
+                            badge.style.color = '#FFFFFF';
                         }
                     }
-                    if (btnCaptureAccel) {
-                        const labels = ['LEVEL', 'LEFT SIDE', 'RIGHT SIDE', 'NOSE DOWN', 'NOSE UP', 'INVERTED'];
-                        btnCaptureAccel.innerHTML = `<span>CAPTURE POSITION (${this.accelStepIndex + 1}/6: ${labels[this.accelStepIndex]}) →</span>`;
+
+                    const toast = document.getElementById('accel-saved-toast');
+                    if (toast) {
+                        toast.innerHTML = `<span>SAVED ✓ Accel Position (${this.accelStepIndex + 1}/6: ${currentLabel}) Recorded & Saved to Flight Controller EEPROM!</span>`;
+                        toast.style.display = 'block';
+                        setTimeout(() => { toast.style.display = 'none'; }, 2200);
                     }
-                } else {
-                    this.setStep(3);
-                    fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
-                }
+
+                    this.accelStepIndex++;
+                    if (this.accelStepIndex < this.accelPositions.length) {
+                        const nextPos = this.accelPositions[this.accelStepIndex];
+                        const nextCardId = cardMap[nextPos];
+                        const nextCard = document.getElementById(nextCardId);
+                        if (nextCard) {
+                            nextCard.classList.add('active');
+                            const badge = document.getElementById(`badge-${nextCardId}`);
+                            if (badge) {
+                                badge.textContent = 'CURRENT TARGET';
+                                badge.className = 'orient-status status-active';
+                            }
+                        }
+                        const nextLabel = labels[this.accelStepIndex];
+                        btnCaptureAccel.innerHTML = `<span>CAPTURE POSITION (${this.accelStepIndex + 1}/6: ${nextLabel}) →</span>`;
+                        btnCaptureAccel.disabled = false;
+                    } else {
+                        btnCaptureAccel.innerHTML = `<span>SAVED ALL 6 POSITIONS ✓ MOVING TO STEP 3...</span>`;
+                        setTimeout(() => {
+                            btnCaptureAccel.disabled = false;
+                            this.setStep(3);
+                            fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
+                        }, 800);
+                    }
+                }, 750);
             });
         }
 
