@@ -1644,6 +1644,7 @@ class CalibrationWizardManager {
         });
 
         if (stepNum === 3) {
+            this.initCompassSpherePoints();
             this.start3DCompassLoop();
         } else {
             this.stop3DCompassLoop();
