@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FALCONZ — Next-Gen Aerospace Ground Station</title>
+    
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Custom Modern SaaS GCS Stylesheet -->
+    <link rel="stylesheet" href="/static/css/styles.css?v=2.2.0">
+</head>
+<body class="saas-body">
+
+    <!-- Top Navigation Bar -->
+    <header class="saas-navbar">
+        <!-- Left: Brand & Product Logo -->
+        <div class="brand-group">
+            <button id="btn-three-dots" class="icon-btn menu-toggle-btn" title="Open Navigation Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+
+            <!-- Navigation Dropdown -->
+            <div id="nav-menu-dropdown" class="nav-menu-dropdown">
+                <div class="dropdown-header">FALCONZ NAVIGATION MENU</div>
+                <button id="nav-item-home" class="dropdown-item active">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <span>Home Overview</span>
+                </button>
+                <button id="nav-item-drone" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    <span>Drone Details</span>
+                </button>
+                <button id="nav-item-cam" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    <span>Camera View</span>
+                </button>
+                <button id="nav-item-inspector" class="dropdown-item">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    <span>Full Inspector</span>
+                </button>
+            </div>
+
+            <div id="btn-brand-home" class="brand-logo-wrap" title="Return to Home Overview">
+                <div class="brand-logo-icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.7 5.2c.3.4.8.5 1.3.3l.5-.3c.4-.2.6-.6.5-1.1z"/></svg>
+                </div>
+                <div class="brand-text-group">
+                    <span class="brand-title">FALCONZ</span>
+                    <span class="enterprise-badge">ENTERPRISE</span>
+                </div>
+            </div>
+
+            <button id="btn-theme-toggle" class="icon-btn theme-btn" title="Toggle Theme">
+                <span id="theme-toggle-icon">☀️</span>
+            </button>
+        </div>
+
+        <!-- Center: Connection Control Panel (Inside rounded card) -->
+        <div class="navbar-connection-card">
+            <div class="select-field">
+                <div class="select-label-wrap">
+                    <label class="select-label">PORT</label>
+                    <span id="port-count-badge" class="port-count-badge" title="Detected Serial COM Ports">0 Serial</span>
+                </div>
+                <div class="select-with-btn">
+                    <select id="conn-input" class="saas-select">
+                        <option value="udp:127.0.0.1:14550" selected>udp:127.0.0.1:14550 (UDP Sim)</option>
+                    </select>
+                    <button id="btn-autodetect-port" class="btn-icon-subtle" title="Auto-Detect Connected Telemetry Ground Port">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="select-field">
+                <label class="select-label">BAUD</label>
+                <select id="baud-input" class="saas-select">
+                    <option value="57600" selected>57600</option>
+                    <option value="115200">115200</option>
+                    <option value="9600">9600</option>
+                    <option value="38400">38400</option>
+                    <option value="921600">921600</option>
+                </select>
+            </div>
+
+            <button id="btn-header-connect" class="btn btn-primary">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v6M12 18v4M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M18 12h4M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/></svg>
+                <span>CONNECT</span>
+            </button>
+            <button id="btn-header-disconnect" class="btn btn-danger-outline">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                <span>DISCONNECT</span>
+            </button>
+        </div>
+
+        <!-- Right: Status Pills -->
+        <div class="navbar-status-group">
+            <div id="status-badge" class="pill-badge pill-disconnected">
+                <span class="status-dot"></span>
+                <span id="status-text">DISCONNECTED</span>
+            </div>
+
+            <div id="armed-badge" class="pill-badge pill-disarmed">DISARMED</div>
+            <div id="mode-badge" class="pill-badge pill-mode">STANDBY</div>
+        </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="saas-main">
+
+        <!-- Page View 0: Home Landing Page with 3 Interactive Compact Module Cards & Interactive WebGL Orb -->
+        <div id="view-home" class="page-view active">
+            <div id="orb-container" class="orb-wrapper"></div>
+            
+            <div class="home-hero-container">
+                <div class="home-header">
+                    <h1 class="home-title">FALCONZ Control Center</h1>
+                    <p class="home-subtitle">Hover over the interactive WebGL Orb to unleash particle wave distortion effects, or select a module below to launch control feeds.</p>
+                </div>
+
+                <!-- Compact 3 Module Cards Layout -->
+                <div class="home-cards-grid">
+                    <!-- Card 1: Drone Details -->
+                    <div id="card-home-drone" class="home-card home-card-sm" title="Explore Drone Details View">
+                        <div class="home-card-header">
+                            <div class="home-card-icon icon-blue">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                            </div>
+                            <span class="home-card-badge badge-blue">LIVE TELEMETRY</span>
+                        </div>
+                        <h2 class="home-card-title">Drone Details</h2>
+                        <p class="home-card-desc">PFD artificial horizon, GPS trajectory map, VFR speed HUD, battery health, and MAVLink console.</p>
+                        <div class="home-card-stats">
+                            <div class="home-stat-chip">PFD Horizon</div>
+                            <div class="home-stat-chip">GPS Trajectory</div>
+                        </div>
+                        <button id="btn-home-drone" class="btn btn-primary btn-sm btn-block">Explore Drone Details →</button>
+                    </div>
+
+                    <!-- Card 2: Camera View -->
+                    <div id="card-home-cam" class="home-card home-card-sm" title="Explore Camera View Page">
+                        <div class="home-card-header">
+                            <div class="home-card-icon icon-purple">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                            </div>
+                            <span class="home-card-badge badge-purple">TRUEVIEW 172.16.23.19</span>
+                        </div>
+                        <h2 class="home-card-title">Camera View</h2>
+                        <p class="home-card-desc">Live HD video streaming with auto RTSP/HTTP transcoder, TrueView IP camera (172.16.23.19), and VLC player.</p>
+                        <div class="home-card-stats">
+                            <div class="home-stat-chip">TrueView IP</div>
+                            <div class="home-stat-chip">RTSP Transcoder</div>
+                        </div>
+                        <button id="btn-home-cam" class="btn btn-primary btn-sm btn-block">Explore Camera View →</button>
+                    </div>
+
+                    <!-- Card 3: Full Inspector -->
+                    <div id="card-home-inspector" class="home-card home-card-sm" title="Explore Full System Inspector">
+                        <div class="home-card-header">
+                            <div class="home-card-icon icon-emerald">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                            </div>
+                            <span class="home-card-badge badge-emerald">35 DIAGNOSTICS</span>
+                        </div>
+                        <h2 class="home-card-title">Full Inspector</h2>
+                        <p class="home-card-desc">Deep-dive system diagnostics monitoring 100+ MAVLink fields across 35 categories including EKF & IMU.</p>
+                        <div class="home-card-stats">
+                            <div class="home-stat-chip">100+ Fields</div>
+                            <div class="home-stat-chip">EKF & IMU</div>
+                        </div>
+                        <button id="btn-home-inspector" class="btn btn-primary btn-sm btn-block">Explore Full Inspector →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page View 1: Drone Telemetry Dashboard ("Drone Details") -->
+        <div id="view-drone-dashboard" class="page-view">
+            
+            <!-- Left Sidebar Telemetry Cards Column -->
+            <div class="gcs-left-sidebar">
+                
+                <!-- Card 1: Primary Flight Display -->
+                <div class="card col-pfd">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                            <h3 class="card-title">Primary Flight Display</h3>
+                        </div>
+                        <button id="btn-pfd-more" class="card-action-btn" title="Open Full MAVLink Telemetry Inspector">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="pfd-container">
+                        <canvas id="attitude-canvas"></canvas>
+                        
+                        <!-- Mini Metric Statistic Cards -->
+                        <div class="pfd-metrics-grid">
+                            <div class="mini-stat-card">
+                                <span class="stat-label">Roll</span>
+                                <span id="val-roll" class="stat-value"><span class="null-value">—</span></span>
+                            </div>
+                            <div class="mini-stat-card">
+                                <span class="stat-label">Pitch</span>
+                                <span id="val-pitch" class="stat-value"><span class="null-value">—</span></span>
+                            </div>
+                            <div class="mini-stat-card span-full">
+                                <span class="stat-label">Yaw / Heading</span>
+                                <span id="val-yaw" class="stat-value"><span class="null-value">—</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Navigation & Position -->
+                <div class="card col-pos">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            <h3 class="card-title">Navigation & Position</h3>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Latitude</span>
+                            <span id="val-lat" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Longitude</span>
+                            <span id="val-lon" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Altitude (MSL)</span>
+                            <span id="val-alt" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Rel Alt (Home)</span>
+                            <span id="val-rel-alt" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box span-full">
+                            <span class="stat-label">Heading</span>
+                            <span id="val-heading" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Speed & VFR HUD (Vehicle Status) -->
+                <div class="card col-vfr">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                            <h3 class="card-title">Speed & Vehicle Status</h3>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Groundspeed</span>
+                            <span id="val-groundspeed" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Airspeed</span>
+                            <span id="val-airspeed" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Climb Rate</span>
+                            <span id="val-climb" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Throttle</span>
+                            <span id="val-throttle" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-info">
+                            <span>Throttle Output</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div id="bar-throttle" class="progress-bar-fill fill-primary" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Power & Battery -->
+                <div class="card col-bat">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="11" x2="23" y2="13"/></svg>
+                            <h3 class="card-title">Power & Battery</h3>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <span class="stat-label">Voltage</span>
+                            <span id="val-voltage" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Current</span>
+                            <span id="val-current" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box span-full">
+                            <span class="stat-label">Remaining Battery</span>
+                            <span id="val-remaining" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-info">
+                            <span>Battery Status</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div id="bar-battery" class="progress-bar-fill fill-success" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 5: GPS Information -->
+                <div class="card col-gps">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.93 4.93dM19.07 4.93M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>
+                            <h3 class="card-title">GPS Information</h3>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box span-full">
+                            <span class="stat-label">Fix Type</span>
+                            <span id="val-fix-type" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Satellites</span>
+                            <span id="val-sats" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">HDOP</span>
+                            <span id="val-hdop" class="stat-value"><span class="null-value">—</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 6: RC Channels & Servos -->
+                <div class="card col-rc">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                            <h3 class="card-title">RC Channels (PWM)</h3>
+                        </div>
+                    </div>
+                    <div id="rc-channel-list" class="channel-list">
+                        <!-- Dynamically generated channel bars -->
+                    </div>
+                </div>
+
+                <!-- Card 7: MAVLink Live Terminal & Command Console -->
+                <div class="card col-terminal">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                            <h3 class="card-title">MAVLink Terminal</h3>
+                        </div>
+                        <div class="terminal-actions">
+                            <button id="btn-clear-terminal" class="btn btn-sm btn-ghost">Clear</button>
+                            <button id="btn-autoscroll" class="btn btn-sm btn-secondary active">Auto-Scroll</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Action Command Chips -->
+                    <div class="terminal-command-chips">
+                        <button class="cmd-chip chip-arm" data-cmd="ARM">ARM</button>
+                        <button class="cmd-chip chip-disarm" data-cmd="DISARM">DISARM</button>
+                        <button class="cmd-chip chip-action" data-cmd="TAKEOFF 10">TAKEOFF 10m</button>
+                        <button class="cmd-chip chip-action" data-cmd="RTL">RTL</button>
+                        <button class="cmd-chip chip-mode" data-cmd="GUIDED">GUIDED</button>
+                        <button class="cmd-chip chip-mode" data-cmd="AUTO">AUTO</button>
+                        <button class="cmd-chip chip-mode" data-cmd="STABILIZE">STABILIZE</button>
+                        <button class="cmd-chip chip-info" data-cmd="MISSION">FETCH MISSION</button>
+                    </div>
+
+                    <!-- Log Filters & Search Bar -->
+                    <div class="terminal-filter-bar">
+                        <div class="filter-chips-group">
+                            <button class="filter-chip active" data-filter="all">ALL</button>
+                            <button class="filter-chip" data-filter="fc">FC STATUS</button>
+                            <button class="filter-chip" data-filter="cmd">COMMANDS</button>
+                            <button class="filter-chip" data-filter="error">ERRORS</button>
+                        </div>
+                        <input type="text" id="terminal-search-input" class="saas-search-input" placeholder="Search logs...">
+                    </div>
+
+                    <!-- Terminal Output Window -->
+                    <div id="terminal-logs" class="terminal-logs-window">
+                        <div class="log-entry log-system">[00:00:00] Initializing FALCONZ Ground Control Station Terminal...</div>
+                    </div>
+
+                    <!-- Command Input Form -->
+                    <div class="terminal-input-bar">
+                        <span class="prompt-symbol">&gt;</span>
+                        <input type="text" id="terminal-input" class="saas-cmd-input" placeholder="Enter GCS command (e.g. ARM, DISARM, TAKEOFF 20, RTL)...">
+                        <button id="btn-send-cmd" class="btn btn-primary btn-sm">SEND</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Hero Map Area -->
+            <div class="gcs-right-map-area">
+                <div class="card hero-map-card">
+                    <div class="card-header">
+                        <div class="card-title-group">
+                            <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2.2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+                            <h3 class="hero-card-title">Live Vehicle Map & Trajectory</h3>
+                        </div>
+                        <div class="map-controls">
+                            <button id="btn-center-map" class="btn btn-primary btn-sm">Target Drone</button>
+                            <button id="btn-fetch-mission" class="btn btn-secondary btn-sm">Fetch Mission</button>
+                            <button id="btn-clear-trail" class="btn btn-secondary btn-sm">Clear Trail</button>
+                        </div>
+                    </div>
+                    <div id="map" class="hero-map-container"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Page View 2: Camera Stream Page -->
+        <div id="view-camera-stream" class="page-view">
+            <div class="card col-camera-page">
+                <div class="card-header">
+                    <div class="card-title-group">
+                        <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                        <h3 class="hero-card-title">Live Camera Stream & VLC Manager</h3>
+                    </div>
+                </div>
+
+                <div class="camera-split-container">
+                    <!-- Left 70%: Camera Viewport -->
+                    <div class="camera-left-70">
+                        <div class="video-container main-camera-frame">
+                            <div class="video-hud-overlay">
+                                <div class="hud-item hud-top-left">
+                                    <span class="hud-dot" id="hud-status-dot">●</span> <span id="cam-status">OFFLINE</span>
+                                </div>
+                                <div class="hud-item hud-top-right">
+                                    ALT: <span id="hud-alt">0.0m</span> | SPD: <span id="hud-spd">0.0m/s</span>
+                                </div>
+                                <div class="hud-item hud-bottom-left">
+                                    BAT: <span id="hud-bat">0%</span> | MODE: <span id="hud-mode">STANDBY</span>
+                                </div>
+                                <div class="hud-item hud-bottom-right">
+                                    <span id="hud-time">--:--:--</span>
+                                </div>
+                            </div>
+
+                            <div id="cam-viewport" class="cam-viewport">
+                                <div class="no-signal-box">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="1.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                                    <div class="no-signal-title">LIVE CAMERA VIEWPORT</div>
+                                    <div class="no-signal-sub">Select TrueView IP or paste URL & click "Connect & Stream"</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right 30%: IP Stream Config Panel -->
+                    <div class="camera-right-30">
+                        <div class="stream-input-controls side-panel">
+                            <div class="vlc-control-header">
+                                <span class="vlc-header-title">IP Camera Details & Stream Config</span>
+                            </div>
+
+                            <div class="input-field-container">
+                                <label for="vlc-ip-input" class="field-label">PASTE IP ADDRESS OR STREAM URL</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="vlc-ip-input" class="saas-input-box" value="172.16.23.19" placeholder="e.g. 172.16.23.19, rtsp://172.16.23.19:554/live">
+                                    <button id="btn-paste-clipboard" class="btn btn-secondary btn-sm" title="Paste from Clipboard">Paste</button>
+                                </div>
+                            </div>
+
+                            <div class="input-field-container">
+                                <label for="cam-engine-select" class="field-label">PLAYER VIEW ENGINE</label>
+                                <select id="cam-engine-select" class="saas-select-full">
+                                    <option value="mjpeg" selected>⚡ Auto RTSP / MJPEG Transcoder</option>
+                                    <option value="iframe">🌐 Direct Web / TrueView HTTP Web Page</option>
+                                    <option value="video">📹 HTML5 Native Video Player</option>
+                                </select>
+                            </div>
+
+                            <div class="input-field-container">
+                                <label for="vlc-protocol-select" class="field-label">STREAM PROTOCOL</label>
+                                <select id="vlc-protocol-select" class="saas-select-full">
+                                    <option value="rtsp://" selected>RTSP (rtsp://)</option>
+                                    <option value="http://">HTTP (http://)</option>
+                                    <option value="https://">HTTPS (https://)</option>
+                                    <option value="udp://">UDP (udp://)</option>
+                                    <option value="custom">Custom / Direct</option>
+                                </select>
+                            </div>
+
+                            <div class="preset-chips-row flex-column">
+                                <span class="preset-label">QUICK PRESETS:</span>
+                                <button class="vlc-preset-chip" data-url="rtsp://172.16.23.19:554/live">🎥 TrueView IP Camera (172.16.23.19)</button>
+                                <button class="vlc-preset-chip" data-url="sim">✨ Simulated HD Feed (sim)</button>
+                                <button class="vlc-preset-chip" data-url="rtsp://127.0.0.1:8554/live">Local SITL (127.0.0.1:8554)</button>
+                                <button class="vlc-preset-chip" data-url="http://172.16.23.19:8080/video">TrueView HTTP (8080)</button>
+                            </div>
+
+                            <div class="constructed-url-bar">
+                                <span class="constructed-label">TARGET:</span>
+                                <input type="text" id="stream-url-input" class="stream-url-full" value="rtsp://172.16.23.19:554/live" readonly>
+                                <button id="btn-copy-stream-url" class="btn btn-sm btn-ghost" title="Copy Full URL">📋</button>
+                            </div>
+
+                            <div class="stream-btn-stack">
+                                <button id="btn-play-stream" class="btn btn-primary btn-block">▶ Connect & Stream</button>
+                                <button id="btn-vlc-stream" class="btn btn-secondary btn-block">🍊 Open in VLC Player</button>
+                                <button id="btn-fullscreen-cam" class="btn btn-ghost btn-block">⛶ Fullscreen</button>
+                            </div>
+
+                            <div id="vlc-status-toast" class="vlc-toast-banner" style="display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Full Telemetry System Inspector Overlay Modal -->
+    <div id="pfd-telemetry-modal" class="pfd-modal-overlay">
+        <div class="pfd-modal-container">
+            <!-- Modal Header -->
+            <div class="pfd-modal-header">
+                <div class="pfd-modal-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                    <div>
+                        <h2>FALCONZ SYSTEM & TELEMETRY INSPECTOR</h2>
+                        <p class="pfd-modal-sub">Real-Time Diagnostics & Live Field Monitor (35 MAVLink Categories)</p>
+                    </div>
+                </div>
+                <div class="pfd-modal-actions">
+                    <div class="pfd-search-box-wrap">
+                        <input type="text" id="pfd-search-input" class="pfd-search-input" placeholder="🔍 Search 100+ telemetry fields (e.g. Accel, EKF, Servo, Voltage, GPS...)" />
+                    </div>
+                    <button id="btn-close-pfd-modal" class="btn btn-danger-outline">✕ Close Inspector</button>
+                </div>
+            </div>
+
+            <!-- Category Navigation Chips -->
+            <div class="pfd-category-tabs" id="pfd-category-tabs">
+                <button class="pfd-tab-btn active" data-cat="all">All (35)</button>
+                <button class="pfd-tab-btn" data-cat="system">1. System</button>
+                <button class="pfd-tab-btn" data-cat="heartbeat">2. Heartbeat</button>
+                <button class="pfd-tab-btn" data-cat="gps">3. GPS</button>
+                <button class="pfd-tab-btn" data-cat="attitude">4. Attitude</button>
+                <button class="pfd-tab-btn" data-cat="localpos">5. Local Pos</button>
+                <button class="pfd-tab-btn" data-cat="globalpos">6. Global Pos</button>
+                <button class="pfd-tab-btn" data-cat="imu">7. IMU</button>
+                <button class="pfd-tab-btn" data-cat="rawsensors">8. Raw Sensors</button>
+                <button class="pfd-tab-btn" data-cat="battery">9. Battery</button>
+                <button class="pfd-tab-btn" data-cat="power">10. Power</button>
+                <button class="pfd-tab-btn" data-cat="airspeed">11. Airspeed</button>
+                <button class="pfd-tab-btn" data-cat="altitude">12. Altitude</button>
+                <button class="pfd-tab-btn" data-cat="baro">13. Barometer</button>
+                <button class="pfd-tab-btn" data-cat="compass">14. Compass</button>
+                <button class="pfd-tab-btn" data-cat="rc">15. RC Input</button>
+                <button class="pfd-tab-btn" data-cat="servo">16. Servo Output</button>
+                <button class="pfd-tab-btn" data-cat="modes">17. Modes</button>
+                <button class="pfd-tab-btn" data-cat="ekf">18. EKF</button>
+                <button class="pfd-tab-btn" data-cat="vibe">19. Vibration</button>
+                <button class="pfd-tab-btn" data-cat="mission">20. Mission</button>
+                <button class="pfd-tab-btn" data-cat="home">21. Home</button>
+                <button class="pfd-tab-btn" data-cat="fence">22. Fence</button>
+                <button class="pfd-tab-btn" data-cat="rally">23. Rally</button>
+                <button class="pfd-tab-btn" data-cat="terrain">24. Terrain</button>
+                <button class="pfd-tab-btn" data-cat="radio">25. Radio</button>
+                <button class="pfd-tab-btn" data-cat="datalink">26. Data Link</button>
+                <button class="pfd-tab-btn" data-cat="statustext">27. Status Text</button>
+                <button class="pfd-tab-btn" data-cat="health">28. Health</button>
+                <button class="pfd-tab-btn" data-cat="failsafe">29. Failsafe</button>
+                <button class="pfd-tab-btn" data-cat="logging">30. Logging</button>
+                <button class="pfd-tab-btn" data-cat="camera">31. Camera/Gimbal</button>
+                <button class="pfd-tab-btn" data-cat="adsb">32. ADS-B</button>
+                <button class="pfd-tab-btn" data-cat="esc">33. ESC</button>
+                <button class="pfd-tab-btn" data-cat="sensors">34. Sensors</button>
+                <button class="pfd-tab-btn" data-cat="params">35. Parameters</button>
+            </div>
+
+            <!-- Inspector Grid Body -->
+            <div class="pfd-modal-body" id="pfd-inspector-body">
+                <!-- Populated dynamically by telemetry_inspector.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/orb.js?v=2.2.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=2.2.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=2.2.0"></script>
+    <script src="/static/js/map.js?v=2.2.0"></script>
+    <script src="/static/js/app.js?v=2.2.0"></script>
+</body>
+</html>
