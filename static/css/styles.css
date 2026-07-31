@@ -2422,34 +2422,31 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     display: block !important;
 }
 
-/* High-Visibility Left Telemetry Sidebar Styling */
+/* Theme-Adaptive Calibration Page Styling (Light & Dark Compatible) */
 .cal-pfd-col .card,
-.cal-telemetry-card {
-    background: #090F24 !important;
-    border: 1px solid #1E293B !important;
+.cal-telemetry-card,
+.cal-content-col .card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-md) !important;
     padding: 0.85rem !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 0.75rem !important;
-    height: auto !important;
-    min-height: 0 !important;
-    flex-shrink: 0 !important;
-    margin-bottom: 0.85rem !important;
+    box-shadow: var(--shadow-card) !important;
+    color: var(--text-primary) !important;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
-.cal-pfd-col .card-title {
-    font-size: 0.88rem !important;
+.cal-pfd-col .card-title,
+.cal-content-col .card-title {
+    font-size: 0.95rem !important;
     font-weight: 800 !important;
-    color: #F8FAFC !important;
+    color: var(--text-primary) !important;
     letter-spacing: 0.5px !important;
 }
 
 .cal-pfd-col .stat-box, 
 .cal-pfd-col .mini-stat-card {
-    background: #050814 !important;
-    border: 1px solid #1E293B !important;
+    background: var(--bg-card-subtle) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-sm) !important;
     padding: 0.55rem 0.75rem !important;
 }
@@ -2457,7 +2454,7 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 .cal-pfd-col .stat-label {
     font-size: 0.72rem !important;
     font-weight: 800 !important;
-    color: #94A3B8 !important;
+    color: var(--text-secondary) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
 }
@@ -2466,33 +2463,19 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     font-family: var(--font-mono) !important;
     font-size: 1.05rem !important;
     font-weight: 800 !important;
-    color: #38BDF8 !important;
+    color: var(--primary) !important;
 }
 
 .cal-pfd-col .null-value {
-    color: #64748B !important;
+    color: var(--text-muted) !important;
 }
 
-/* High-Visibility Right Calibration Wizard Column Theme & Alignment */
-.cal-content-col .card {
-    background: #090F24 !important;
-    border: 1px solid #1E293B !important;
+.mp-frame-panel,
+.compass-metrics-panel {
+    background: var(--bg-card-subtle) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-md) !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
-}
-
-.cal-content-col .card-title {
-    font-size: 1.05rem !important;
-    font-weight: 800 !important;
-    color: #FFFFFF !important;
-    letter-spacing: 0.5px !important;
-}
-
-.mp-frame-panel {
-    background: #050814 !important;
-    border: 1px solid #1E293B !important;
-    border-radius: var(--radius-md) !important;
-    padding: 0.75rem 1rem !important;
+    padding: 0.85rem 1.1rem !important;
 }
 
 .mp-frame-rows {
@@ -2503,25 +2486,52 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 .mp-frame-row {
-    background: #0B122C !important;
-    border: 1.5px solid #1E293B !important;
+    background: var(--bg-card) !important;
+    border: 1.5px solid var(--border-color) !important;
     border-radius: var(--radius-md) !important;
     padding: 0.65rem 1rem !important;
     transition: all 0.25s ease !important;
+    color: var(--text-primary) !important;
 }
 
 .mp-frame-row:hover, 
 .mp-frame-row.active {
-    border-color: #00F3FF !important;
-    background: rgba(0, 243, 255, 0.12) !important;
-    box-shadow: 0 0 16px rgba(0, 243, 255, 0.25) !important;
+    border-color: var(--primary) !important;
+    background: var(--primary-light) !important;
+    box-shadow: 0 0 16px rgba(59, 91, 255, 0.25) !important;
 }
 
 .mp-row-title {
     font-family: var(--font-mono) !important;
     font-size: 0.95rem !important;
     font-weight: 800 !important;
-    color: #00F3FF !important;
+    color: var(--primary) !important;
+}
+
+.mp-icon-label {
+    color: var(--text-secondary) !important;
+}
+
+.orient-card {
+    background: var(--bg-card) !important;
+    border: 1.5px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.75rem 0.85rem !important;
+    color: var(--text-primary) !important;
+}
+
+.orient-header {
+    color: var(--text-primary) !important;
+}
+
+.orient-card.active {
+    border-color: var(--primary) !important;
+    background: var(--primary-light) !important;
+}
+
+.orient-card.completed {
+    border-color: var(--success) !important;
+    background: var(--success-bg) !important;
 }
 
 .mp-frame-icons-group {
