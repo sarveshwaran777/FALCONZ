@@ -5,8 +5,9 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize PFD Artificial Horizon, Leaflet Satellite Map, and System Inspector
+    // Initialize PFD Artificial Horizon, Calibration PFD, Leaflet Satellite Map, and System Inspector
     const pfd = new AttitudeIndicator('attitude-canvas');
+    const calPfd = new AttitudeIndicator('cal-attitude-canvas');
     const gcsMap = new GCSMap('map');
     window.telemetryInspector = new TelemetryInspector();
 
