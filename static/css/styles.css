@@ -1944,21 +1944,77 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     justify-content: center;
 }
 
+/* Ultra High-Visibility Docked Action Bar */
 .cal-action-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.65rem 1.25rem;
-    background: #0B1021;
-    border-top: 1px solid var(--border-color);
+    gap: 1rem;
+    padding: 0.85rem 1.25rem !important;
+    background: #090D1A !important;
+    border-top: 2px solid var(--primary) !important;
     margin-top: auto;
     flex-shrink: 0 !important;
-    z-index: 10;
+    z-index: 100 !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.5);
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
 }
 
-.cal-action-row.full-width {
-    width: 100%;
+.cal-action-row .btn-primary,
+.cal-action-row .btn-success,
+.cal-action-row .btn-lg {
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    padding: 0.75rem 1.5rem !important;
+    border-radius: var(--radius-md) !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+.cal-action-row .btn-primary {
+    background: linear-gradient(135deg, #2563EB, #3B82F6) !important;
+    color: #FFFFFF !important;
+    border: 1px solid #60A5FA !important;
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.5) !important;
+}
+
+.cal-action-row .btn-primary:hover {
+    background: linear-gradient(135deg, #1D4ED8, #2563EB) !important;
+    box-shadow: 0 0 24px rgba(59, 130, 246, 0.75) !important;
+    transform: translateY(-1px) !important;
+}
+
+.cal-action-row .btn-success {
+    background: linear-gradient(135deg, #059669, #10B981) !important;
+    color: #FFFFFF !important;
+    border: 1px solid #34D399 !important;
+    box-shadow: 0 0 16px rgba(16, 185, 129, 0.5) !important;
+}
+
+.cal-action-row .btn-success:hover {
+    background: linear-gradient(135deg, #047857, #059669) !important;
+    box-shadow: 0 0 24px rgba(16, 185, 129, 0.75) !important;
+    transform: translateY(-1px) !important;
+}
+
+.cal-action-row .btn-secondary,
+.cal-action-row .btn-sm {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    padding: 0.6rem 1.1rem !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: #94A3B8 !important;
+    border: 1px solid #475569 !important;
+    border-radius: var(--radius-md) !important;
+}
+
+.cal-action-row .btn-secondary:hover {
+    background: rgba(51, 65, 85, 0.9) !important;
+    color: #F8FAFC !important;
+    border-color: #94A3B8 !important;
 }
 
 /* 6-Position Accel Setup Cards */
