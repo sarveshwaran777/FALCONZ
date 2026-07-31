@@ -1944,22 +1944,23 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     justify-content: center;
 }
 
-/* High-Visibility Locked Calibration Action Bar */
+/* High-Visibility Locked Calibration Action Bar (Theme Adaptive) */
 .cal-action-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
     padding: 0.75rem 1.25rem !important;
-    background: #080D1F !important;
-    border-top: 1px solid #1E293B !important;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.4);
+    background: var(--bg-card-subtle) !important;
+    border-top: 1.5px solid var(--border-color) !important;
+    box-shadow: var(--shadow-card);
     margin-top: auto;
     flex-shrink: 0 !important;
     z-index: 100 !important;
     position: relative;
     border-bottom-left-radius: var(--radius-md);
     border-bottom-right-radius: var(--radius-md);
+    color: var(--text-primary) !important;
 }
 
 .cal-action-row .btn-primary {
@@ -1999,13 +2000,13 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 .cal-action-row .btn-secondary {
-    background: rgba(30, 41, 59, 0.8) !important;
-    color: var(--text-secondary) !important;
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
     font-size: 0.8rem !important;
     font-weight: 700 !important;
     padding: 0.55rem 1.15rem !important;
     border-radius: var(--radius-pill) !important;
-    border: 1px solid var(--border-color) !important;
+    border: 1.5px solid var(--border-color) !important;
 }
 
 .cal-action-row.full-width {
@@ -2183,14 +2184,15 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
 }
 
 .compass-metrics-panel {
-    background: #050814;
-    border: 1px solid #1E293B;
+    background: var(--bg-card-subtle) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: var(--radius-md);
     padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     justify-content: center;
+    color: var(--text-primary) !important;
 }
 
 .cal-status-guide-box {
@@ -2200,14 +2202,14 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     padding: 0.75rem 0.95rem;
     font-size: 0.82rem;
     font-weight: 700;
-    color: #60A5FA;
+    color: var(--primary);
     line-height: 1.4;
 }
 
 .xyz-title-label {
     font-size: 0.72rem;
     font-weight: 800;
-    color: #94A3B8;
+    color: var(--text-secondary) !important;
     letter-spacing: 0.8px;
     text-transform: uppercase;
 }
