@@ -1527,6 +1527,18 @@ class CalibrationWizardManager {
             });
         });
 
+        // Make Progress Step Pills clickable for instant tab navigation
+        [1, 2, 3, 4].forEach(stepNum => {
+            const pill = document.getElementById(`cal-step-pill-${stepNum}`);
+            if (pill) {
+                pill.style.cursor = 'pointer';
+                pill.title = `Switch to Step ${stepNum}`;
+                pill.addEventListener('click', () => {
+                    this.setStep(stepNum);
+                });
+            }
+        });
+
         if (btnInstall) {
             btnInstall.addEventListener('click', async () => {
                 const checkedRadio = document.querySelector('input[name="frame_type_radio"]:checked');
