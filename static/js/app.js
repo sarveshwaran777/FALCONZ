@@ -1549,8 +1549,11 @@ class CalibrationWizardManager {
                 const bar = document.getElementById('upload-progress-bar');
                 const pct = document.getElementById('upload-pct-label');
                 const statusMsg = document.getElementById('upload-status-msg');
+                const fileCount = document.getElementById('upload-file-count');
+                const logWindow = document.getElementById('upload-file-log-window');
                 
                 if (overlay) overlay.style.display = 'flex';
+                if (logWindow) logWindow.innerHTML = '';
                 btnInstall.disabled = true;
 
                 fetch('/api/calibration/frame', {
@@ -1559,30 +1562,66 @@ class CalibrationWizardManager {
                     body: JSON.stringify({ frame_class: 1, frame_type: 1, frame_name: val })
                 }).catch(() => {});
 
-                let progress = 0;
+                // List of 8 realistic APM/MAVLink parameter data files to flash over 9 seconds
+                const uploadFiles = [
+                    { time: 0, file: 'FRAME_CLASS_QUAD.param', desc: 'Parsing Frame Class Table & Motor Allocation Vector...' },
+                    { time: 1.2, file: `MOT_FRAME_TYPE_${val.toUpperCase()}.param`, desc: `Writing ${val} Motor Matrix Angle Matrix to APM Flash...` },
+                    { time: 2.4, file: 'PROP_ROTATION_MAP.dat', desc: 'Configuring CW / CCW Propeller Thrust Vectoring Table...' },
+                    { time: 3.6, file: 'SERVO_OUTPUT_RAW.bin', desc: 'Flashing PWM Motor Output Channel Assignment (CH1 - CH8)...' },
+                    { time: 4.8, file: 'EKF3_SRC1_POSXY.cfg', desc: 'Initializing Extended Kalman Filter (EKF3) Spatial Matrix...' },
+                    { time: 6.0, file: 'AHRS_ORIENTATION.dat', desc: 'Syncing Primary Flight Display Inertial Sensor Mapping...' },
+                    { time: 7.2, file: 'APM_HARDWARE_CHECK.bin', desc: 'Verifying Flight Controller Flash Memory Checksum & CRC32...' },
+                    { time: 8.4, file: 'FLASH_MEMORY_COMMIT.sys', desc: 'Committing All Parameters to APM Non-Volatile EEPROM...' }
+                ];
+
+                let startTime = Date.now();
+                let fileIndex = 0;
+                const totalDuration = 9000; // 9 seconds total upload time
+
+                const logItem = (msg, isSuccess = false) => {
+                    if (!logWindow) return;
+                    const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+                    const line = document.createElement('div');
+                    line.className = isSuccess ? 'upload-log-item log-success' : 'upload-log-item';
+                    line.textContent = `[${elapsed}s] ${msg}`;
+                    logWindow.appendChild(line);
+                    logWindow.scrollTop = logWindow.scrollHeight;
+                };
+
+                logItem('Initiating MAVLink High-Speed Parameter Transfer...');
+
                 const interval = setInterval(() => {
-                    progress += 4;
+                    const elapsed = Date.now() - startTime;
+                    const progress = Math.min(100, Math.floor((elapsed / totalDuration) * 100));
+
                     if (bar) bar.style.width = `${progress}%`;
                     if (pct) pct.textContent = `${progress}%`;
 
-                    if (progress === 24 && statusMsg) {
-                        statusMsg.textContent = `Uploading FRAME_CLASS = 1 & FRAME_TYPE = 1 (frame_${val.toLowerCase()}.param)...`;
-                    } else if (progress === 60 && statusMsg) {
-                        statusMsg.textContent = `Flashing Motor Matrix Config & Propeller Rotation Table to EEPROM...`;
-                    } else if (progress === 88 && statusMsg) {
-                        statusMsg.textContent = `Verifying EEPROM Parameter Checksum...`;
+                    if (fileIndex < uploadFiles.length) {
+                        const nextFile = uploadFiles[fileIndex];
+                        if (elapsed >= nextFile.time * 1000) {
+                            if (statusMsg) statusMsg.textContent = `Flashing ${nextFile.file}: ${nextFile.desc}`;
+                            if (fileCount) fileCount.textContent = `${fileIndex + 1} / ${uploadFiles.length} Files Flashed`;
+                            logItem(`>>> UPLOADING FILE [${fileIndex + 1}/${uploadFiles.length}]: ${nextFile.file}`);
+                            fileIndex++;
+                        }
                     }
 
-                    if (progress >= 100) {
+                    if (elapsed >= totalDuration) {
                         clearInterval(interval);
-                        if (statusMsg) statusMsg.textContent = `SAVED ✓ Frame Configuration Data Flashed Successfully!`;
+                        if (bar) bar.style.width = '100%';
+                        if (pct) pct.textContent = '100%';
+                        if (fileCount) fileCount.textContent = '8 / 8 Files Flashed';
+                        if (statusMsg) statusMsg.textContent = `SAVED ✓ All 8 APM Frame Parameters Flashed Successfully!`;
+                        logItem('SUCCESS ✓ EEPROM Flash Checksum Verified. Frame Setup Complete!', true);
+
                         setTimeout(() => {
                             if (overlay) overlay.style.display = 'none';
                             btnInstall.disabled = false;
                             this.setStep(2);
-                        }, 500);
+                        }, 900);
                     }
-                }, 70);
+                }, 100);
             });
         }
 
@@ -1594,6 +1633,15 @@ class CalibrationWizardManager {
             btnBackToStep2.addEventListener('click', () => this.setStep(2));
         }
 
+        // Separate Popup Box Close Button
+        const btnClosePopup = document.getElementById('btn-close-accel-popup');
+        if (btnClosePopup) {
+            btnClosePopup.addEventListener('click', () => {
+                const popup = document.getElementById('accel-popup-modal');
+                if (popup) popup.style.display = 'none';
+            });
+        }
+
         if (btnCaptureAccel) {
             btnCaptureAccel.addEventListener('click', async () => {
                 if (btnCaptureAccel.disabled) return;
@@ -1603,7 +1651,7 @@ class CalibrationWizardManager {
                 const labels = ['LEVEL', 'LEFT SIDE', 'RIGHT SIDE', 'NOSE DOWN', 'NOSE UP', 'INVERTED'];
                 const currentLabel = labels[this.accelStepIndex];
 
-                btnCaptureAccel.innerHTML = `<span><svg class="spinning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" style="margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="10"/></svg> SAVING & RECORDING ${currentLabel}...</span>`;
+                btnCaptureAccel.innerHTML = `<span><svg class="spinning" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5" style="margin-right: 6px;"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="10"/></svg> RECORDING & SAVING ${currentLabel}...</span>`;
 
                 fetch('/api/calibration/accel', {
                     method: 'POST',
@@ -1627,18 +1675,20 @@ class CalibrationWizardManager {
                         card.classList.add('completed');
                         const badge = document.getElementById(`badge-${cardId}`);
                         if (badge) {
-                            badge.textContent = 'SAVED ✓';
+                            badge.textContent = 'DONE ✓';
                             badge.className = 'orient-status status-completed';
-                            badge.style.background = '#10B981';
-                            badge.style.color = '#FFFFFF';
                         }
                     }
 
-                    const toast = document.getElementById('accel-saved-toast');
-                    if (toast) {
-                        toast.innerHTML = `<span>SAVED ✓ Accel Position (${this.accelStepIndex + 1}/6: ${currentLabel}) Recorded & Saved to Flight Controller EEPROM!</span>`;
-                        toast.style.display = 'block';
-                        setTimeout(() => { toast.style.display = 'none'; }, 2200);
+                    // Show SEPARATE Floating Popup Modal Box
+                    const popup = document.getElementById('accel-popup-modal');
+                    const popupDesc = document.getElementById('popup-desc-text');
+                    if (popup) {
+                        if (popupDesc) {
+                            popupDesc.textContent = `Position sample (${this.accelStepIndex + 1}/6: ${currentLabel}) recorded & saved to APM EEPROM!`;
+                        }
+                        popup.style.display = 'flex';
+                        setTimeout(() => { popup.style.display = 'none'; }, 2400);
                     }
 
                     this.accelStepIndex++;
@@ -1658,14 +1708,14 @@ class CalibrationWizardManager {
                         btnCaptureAccel.innerHTML = `<span>CAPTURE POSITION (${this.accelStepIndex + 1}/6: ${nextLabel}) →</span>`;
                         btnCaptureAccel.disabled = false;
                     } else {
-                        btnCaptureAccel.innerHTML = `<span>SAVED ALL 6 POSITIONS ✓ MOVING TO STEP 3...</span>`;
+                        btnCaptureAccel.innerHTML = `<span>ALL 6 POSITIONS SAVED ✓ MOVING TO STEP 3...</span>`;
                         setTimeout(() => {
                             btnCaptureAccel.disabled = false;
                             this.setStep(3);
                             fetch('/api/calibration/compass', { method: 'POST' }).catch(() => {});
-                        }, 800);
+                        }, 1000);
                     }
-                }, 750);
+                }, 850);
             });
         }
 

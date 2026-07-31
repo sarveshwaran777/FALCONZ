@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <!-- Custom Modern SaaS GCS Stylesheet -->
-    <link rel="stylesheet" href="/static/css/styles.css?v=16.0.0">
+    <link rel="stylesheet" href="/static/css/styles.css?v=17.0.0">
 </head>
 <body class="saas-body">
 
@@ -824,7 +824,7 @@
                                 </div>
                                 
                                 <div class="cal-body" style="position: relative;">
-                                    <!-- Parameter Upload Progress Overlay -->
+                                    <!-- Parameter Upload Progress Overlay (8-10 Seconds Real Time Data Files Log) -->
                                     <div id="frame-upload-overlay" class="frame-upload-overlay" style="display: none;">
                                         <div class="upload-modal-box">
                                             <div class="upload-icon-wrap">
@@ -832,12 +832,19 @@
                                                     <circle cx="12" cy="12" r="10" stroke-dasharray="42" stroke-dashoffset="14"/>
                                                 </svg>
                                             </div>
-                                            <h4 class="upload-title">UPLOADING APM FRAME PARAMETER DATA FILES</h4>
-                                            <p id="upload-status-msg" class="upload-subtitle">Initializing MAVLink Parameter Transfer (frame_type.param)...</p>
+                                            <h4 class="upload-title">UPLOADING APM AIRFRAME PARAMETERS & CONFIG FILES</h4>
+                                            <p id="upload-status-msg" class="upload-subtitle">Initializing MAVLink Parameter Stream Protocol...</p>
                                             <div class="upload-progress-track">
                                                 <div id="upload-progress-bar" class="upload-progress-fill" style="width: 0%;"></div>
                                             </div>
-                                            <div id="upload-pct-label" class="upload-pct-text">0%</div>
+                                            <div class="upload-meta-row">
+                                                <span id="upload-pct-label" class="upload-pct-text">0%</span>
+                                                <span id="upload-file-count" class="upload-file-count">0 / 8 Files Flashed</span>
+                                            </div>
+                                            <!-- Live Uploading Parameter Files Terminal Window -->
+                                            <div id="upload-file-log-window" class="upload-file-log-window">
+                                                <div class="upload-log-item log-system">[0.0s] Preparing Flash Memory Allocation...</div>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -988,9 +995,18 @@
 
                                 <p class="cal-desc">Place your drone level and still on each specified orientation, then click <b>'Capture Current Position'</b> to record offset values.</p>
 
-                                <!-- Accel Position Saved Toast Notification -->
-                                <div id="accel-saved-toast" class="accel-saved-toast" style="display: none;">
-                                    <span>SAVED ✓ Accel Position Recorded & Saved to Flight Controller EEPROM!</span>
+                                <!-- Separate Popup Modal Box for Position Saved Confirmation -->
+                                <div id="accel-popup-modal" class="accel-popup-modal" style="display: none;">
+                                    <div class="popup-modal-content">
+                                        <div class="popup-icon-circle">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                        </div>
+                                        <div class="popup-text-group">
+                                            <h4 class="popup-title">POSITION SAMPLE SAVED ✓</h4>
+                                            <p id="popup-desc-text" class="popup-desc">Position sample recorded & saved to APM EEPROM.</p>
+                                        </div>
+                                        <button type="button" id="btn-close-accel-popup" class="btn-popup-close">✕</button>
+                                    </div>
                                 </div>
 
                                 <div class="accel-orient-grid">
@@ -1196,10 +1212,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="/static/js/orb.js?v=16.0.0"></script>
-    <script src="/static/js/attitude_indicator.js?v=16.0.0"></script>
-    <script src="/static/js/telemetry_inspector.js?v=16.0.0"></script>
-    <script src="/static/js/map.js?v=16.0.0"></script>
-    <script src="/static/js/app.js?v=16.0.0"></script>
+    <script src="/static/js/orb.js?v=17.0.0"></script>
+    <script src="/static/js/attitude_indicator.js?v=17.0.0"></script>
+    <script src="/static/js/telemetry_inspector.js?v=17.0.0"></script>
+    <script src="/static/js/map.js?v=17.0.0"></script>
+    <script src="/static/js/app.js?v=17.0.0"></script>
 </body>
 </html>
