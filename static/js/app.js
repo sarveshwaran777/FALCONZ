@@ -1986,8 +1986,8 @@ class CalibrationWizardManager {
             const dz = pt.z - activeZ;
             const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-            // Connect dot when board marker rotates close
-            if (dist < 68 || Math.random() < 0.05) {
+            // Connect dot ONLY when board marker rotates close to target dot
+            if (dist < 60) {
                 pt.collected = true;
                 this.collectedCount++;
             }
@@ -2033,13 +2033,6 @@ class CalibrationWizardManager {
         this.draw3DCompassBox();
         const render = () => {
             if (!this.isCompassActive) return;
-
-            // Continuous 3D rotation if user is not manually dragging canvas
-            if (!this.isUserDragging) {
-                this.currentYaw = (this.currentYaw + 0.8) % 360;
-                this.currentRoll = Math.sin(Date.now() / 700) * 30;
-                this.currentPitch = Math.cos(Date.now() / 900) * 25;
-            }
 
             if (this.currentStep === 3) {
                 this.markSpherePointCollected(this.currentRoll, this.currentPitch, this.currentYaw);
