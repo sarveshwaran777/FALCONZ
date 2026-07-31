@@ -313,16 +313,41 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function setConnectionStatus(connected, connString = '', isSerial = false) {
-        if (!elements.statusBadge) return;
+    let isMavlinkConnected = false;
+
+    function updateConnectButtonUI(connected) {
+        if (!elements.btnConnect) return;
+        const iconEl = document.getElementById('header-conn-icon');
+        const textEl = document.getElementById('header-conn-text');
+
         if (connected) {
-            elements.statusBadge.className = 'pill-badge pill-connected';
-            const label = connString ? (isSerial ? `LIVE (${connString})` : `LIVE (${connString.split(':')[0].toUpperCase()})`) : 'LIVE';
-            elements.statusText.textContent = label;
+            elements.btnConnect.className = 'btn btn-danger-outline';
+            if (textEl) textEl.textContent = 'DISCONNECT';
+            if (iconEl) {
+                iconEl.innerHTML = '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>';
+            }
         } else {
-            elements.statusBadge.className = 'pill-badge pill-disconnected';
-            elements.statusText.textContent = 'DISCONNECTED';
+            elements.btnConnect.className = 'btn btn-primary';
+            if (textEl) textEl.textContent = 'CONNECT';
+            if (iconEl) {
+                iconEl.innerHTML = '<path d="M12 2v6M12 18v4M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M2 12h6M18 12h4M4.93 19.07l4.24-4.24M14.83 9.17l4.24-4.24"/>';
+            }
         }
+    }
+
+    function setConnectionStatus(connected, connString = '', isSerial = false) {
+        isMavlinkConnected = Boolean(connected);
+        if (elements.statusBadge) {
+            if (connected) {
+                elements.statusBadge.className = 'pill-badge pill-connected';
+                const label = connString ? (isSerial ? `LIVE (${connString})` : `LIVE (${connString.split(':')[0].toUpperCase()})`) : 'LIVE';
+                elements.statusText.textContent = label;
+            } else {
+                elements.statusBadge.className = 'pill-badge pill-disconnected';
+                elements.statusText.textContent = 'DISCONNECTED';
+            }
+        }
+        updateConnectButtonUI(isMavlinkConnected);
     }
 
     if (elements.btnPfdMore) {
@@ -1129,49 +1154,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Connect & Disconnect API calls
+    // Connect & Disconnect Toggle API Handler
     if (elements.btnConnect) {
         elements.btnConnect.addEventListener('click', async () => {
-            const connStr = elements.connInput ? elements.connInput.value.trim() : 'udp:127.0.0.1:14550';
-            const baudVal = elements.baudInput ? parseInt(elements.baudInput.value, 10) : 57600;
+            if (isMavlinkConnected) {
+                // Currently connected -> trigger Disconnect
+                try {
+                    const res = await fetch('/api/disconnect', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({})
+                    });
+                    const resData = await res.json();
+                    console.log('Disconnect response:', resData);
 
-            // Switch to Drone Details view to show live telemetry dashboard
-            switchToDroneView();
+                    renderTerminalLogs([{
+                        timestamp: Date.now() / 1000,
+                        time_str: new Date().toLocaleTimeString(),
+                        message: `[GCS] Disconnecting MAVLink telemetry stream...`,
+                        level: 'info'
+                    }]);
+                } catch (e) {
+                    console.error('Failed to request disconnect:', e);
+                }
+            } else {
+                // Currently disconnected -> trigger Connect
+                const connStr = elements.connInput ? elements.connInput.value.trim() : 'udp:127.0.0.1:14550';
+                const baudVal = elements.baudInput ? parseInt(elements.baudInput.value, 10) : 57600;
 
-            try {
-                const res = await fetch('/api/connect', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ connection: connStr, baud: baudVal })
-                });
-                const resData = await res.json();
-                console.log('Connect response:', resData);
+                // Switch to Drone Details view to show live telemetry dashboard
+                switchToDroneView();
 
-                // Add terminal status log
-                renderTerminalLogs([{
-                    timestamp: Date.now() / 1000,
-                    time_str: new Date().toLocaleTimeString(),
-                    message: `[GCS] Connecting MAVLink to ${connStr} @ ${baudVal} baud...`,
-                    level: 'warn'
-                }]);
-            } catch (e) {
-                console.error('Failed to request connect:', e);
-            }
-        });
-    }
+                try {
+                    const res = await fetch('/api/connect', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ connection: connStr, baud: baudVal })
+                    });
+                    const resData = await res.json();
+                    console.log('Connect response:', resData);
 
-    if (elements.btnDisconnect) {
-        elements.btnDisconnect.addEventListener('click', async () => {
-            try {
-                const res = await fetch('/api/disconnect', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({})
-                });
-                const resData = await res.json();
-                console.log('Disconnect response:', resData);
-            } catch (e) {
-                console.error('Failed to request disconnect:', e);
+                    // Add terminal status log
+                    renderTerminalLogs([{
+                        timestamp: Date.now() / 1000,
+                        time_str: new Date().toLocaleTimeString(),
+                        message: `[GCS] Connecting MAVLink to ${connStr} @ ${baudVal} baud...`,
+                        level: 'warn'
+                    }]);
+                } catch (e) {
+                    console.error('Failed to request connect:', e);
+                }
             }
         });
     }
