@@ -1706,10 +1706,10 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     width: 100%;
 }
 
-/* 35% Permanent PFD Column */
+/* 30% Left Telemetry Sidebar Column */
 .cal-pfd-col {
-    flex: 0 0 35%;
-    max-width: 35%;
+    flex: 0 0 30% !important;
+    max-width: 30% !important;
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -1736,10 +1736,10 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     position: relative;
 }
 
-/* 65% Wizard Content Column */
+/* 70% Wizard Content Column */
 .cal-content-col {
-    flex: 0 0 65%;
-    max-width: 65%;
+    flex: 0 0 70% !important;
+    max-width: 70% !important;
     display: flex;
     flex-direction: column;
     height: 100% !important;
@@ -1891,9 +1891,9 @@ button:active, .btn:active, .dropdown-item:active, .pfd-tab-btn:active, .cmd-chi
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
-    overflow: hidden !important;
+    overflow-y: auto !important;
 }
 
 .cal-body.center-content {
