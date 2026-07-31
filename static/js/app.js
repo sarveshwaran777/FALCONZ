@@ -1722,8 +1722,13 @@ class CalibrationWizardManager {
     }
 
     updateTelemetry(data) {
-        if (!data || !data.attitude) return;
-        const att = data.attitude;
+        if (!data) return;
+        const att = data.attitude || {};
+        const pos = data.position || {};
+        const vfr = data.vfr_hud || {};
+        const bat = data.battery || {};
+        const gps = data.gps || {};
+
         const roll = att.roll !== null && att.roll !== undefined ? att.roll : 0;
         const pitch = att.pitch !== null && att.pitch !== undefined ? att.pitch : 0;
         const yaw = att.yaw !== null && att.yaw !== undefined ? att.yaw : 0;
@@ -1732,12 +1737,15 @@ class CalibrationWizardManager {
         this.currentPitch = pitch;
         this.currentYaw = yaw;
 
-        const rollEl = document.getElementById('cal-live-roll');
-        const pitchEl = document.getElementById('cal-live-pitch');
-        const orientLbl = document.getElementById('cal-live-orient-label');
+        // Card 1: PFD Readouts
+        const rollEl = document.getElementById('cal-val-roll');
+        const pitchEl = document.getElementById('cal-val-pitch');
+        const yawEl = document.getElementById('cal-val-yaw');
+        const orientLbl = document.getElementById('cal-orient-label');
 
         if (rollEl) rollEl.textContent = `${roll.toFixed(1)}°`;
         if (pitchEl) pitchEl.textContent = `${pitch.toFixed(1)}°`;
+        if (yawEl) yawEl.textContent = `${yaw.toFixed(1)}°`;
 
         let orientName = 'LEVEL';
         if (Math.abs(roll) > 60 && roll > 0) orientName = 'RIGHT SIDE';
@@ -1748,6 +1756,60 @@ class CalibrationWizardManager {
 
         if (orientLbl) orientLbl.textContent = orientName;
 
+        // Card 2: Navigation & Position
+        const latEl = document.getElementById('cal-val-lat');
+        const lonEl = document.getElementById('cal-val-lon');
+        const altEl = document.getElementById('cal-val-alt');
+        const relAltEl = document.getElementById('cal-val-rel-alt');
+        const headingEl = document.getElementById('cal-val-heading');
+
+        if (latEl) latEl.textContent = pos.lat !== null && pos.lat !== undefined ? pos.lat.toFixed(6) : '—';
+        if (lonEl) lonEl.textContent = pos.lon !== null && pos.lon !== undefined ? pos.lon.toFixed(6) : '—';
+        if (altEl) altEl.textContent = pos.alt !== null && pos.alt !== undefined ? `${pos.alt.toFixed(1)} m` : '—';
+        if (relAltEl) relAltEl.textContent = pos.rel_alt !== null && pos.rel_alt !== undefined ? `${pos.rel_alt.toFixed(1)} m` : '—';
+        if (headingEl) headingEl.textContent = pos.heading !== null && pos.heading !== undefined ? `${pos.heading.toFixed(0)}°` : `${Math.round(yaw)}°`;
+
+        // Card 3: Speed & Vehicle Status
+        const gspeedEl = document.getElementById('cal-val-groundspeed');
+        const aspeedEl = document.getElementById('cal-val-airspeed');
+        const climbEl = document.getElementById('cal-val-climb');
+        const throttleEl = document.getElementById('cal-val-throttle');
+        const barThrottle = document.getElementById('cal-bar-throttle');
+
+        if (gspeedEl) gspeedEl.textContent = vfr.groundspeed !== null && vfr.groundspeed !== undefined ? `${vfr.groundspeed.toFixed(1)} m/s` : '—';
+        if (aspeedEl) aspeedEl.textContent = vfr.airspeed !== null && vfr.airspeed !== undefined ? `${vfr.airspeed.toFixed(1)} m/s` : '—';
+        if (climbEl) climbEl.textContent = vfr.climb !== null && vfr.climb !== undefined ? `${vfr.climb.toFixed(1)} m/s` : '—';
+        if (throttleEl) throttleEl.textContent = vfr.throttle !== null && vfr.throttle !== undefined ? `${vfr.throttle.toFixed(0)}%` : '—';
+        if (barThrottle) barThrottle.style.width = vfr.throttle ? `${Math.min(Math.max(vfr.throttle, 0), 100)}%` : '0%';
+
+        // Card 4: Power & Battery
+        const voltEl = document.getElementById('cal-val-voltage');
+        const currEl = document.getElementById('cal-val-current');
+        const remEl = document.getElementById('cal-val-remaining');
+        const barBattery = document.getElementById('cal-bar-battery');
+
+        if (voltEl) voltEl.textContent = bat.voltage !== null && bat.voltage !== undefined ? `${bat.voltage.toFixed(1)} V` : '—';
+        if (currEl) currEl.textContent = bat.current !== null && bat.current !== undefined ? `${bat.current.toFixed(1)} A` : '—';
+        if (remEl) remEl.textContent = bat.remaining !== null && bat.remaining !== undefined ? `${bat.remaining.toFixed(0)}%` : '—';
+        if (barBattery) barBattery.style.width = bat.remaining ? `${Math.min(Math.max(bat.remaining, 0), 100)}%` : '0%';
+
+        // Card 5: GPS Information
+        const fixEl = document.getElementById('cal-val-fix-type');
+        const satsEl = document.getElementById('cal-val-sats');
+        const hdopEl = document.getElementById('cal-val-hdop');
+
+        if (fixEl) fixEl.textContent = gps.fix_type || '—';
+        if (satsEl) satsEl.textContent = gps.satellites !== null && gps.satellites !== undefined ? gps.satellites : '—';
+        if (hdopEl) hdopEl.textContent = gps.hdop !== null && gps.hdop !== undefined ? gps.hdop.toFixed(2) : '—';
+
+        // Card 6: RC Channels (PWM)
+        if (data.rc && Array.isArray(data.rc)) {
+            if (typeof updatePwmBars === 'function') {
+                updatePwmBars('cal-rc-channel-list', data.rc, 'rc');
+            }
+        }
+
+        // Magnetometer live telemetry for 3D sphere step
         const magX = document.getElementById('cal-mag-x');
         const magY = document.getElementById('cal-mag-y');
         const magZ = document.getElementById('cal-mag-z');

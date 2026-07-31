@@ -586,9 +586,11 @@
                 <!-- Split Body Layout: 35% Left Permanent PFD / 65% Right Wizard Content -->
                 <div class="cal-split-body">
                     
-                    <!-- Left Column (35% Width): Permanent Primary Flight Display -->
+                    <!-- Left Column (35% Width): Scrollable Telemetry Cards Column -->
                     <div class="cal-pfd-col">
-                        <div class="card cal-card cal-pfd-height-full">
+                        
+                        <!-- Card 1: Primary Flight Display -->
+                        <div class="card cal-card">
                             <div class="card-header">
                                 <div class="card-title-group">
                                     <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
@@ -596,16 +598,20 @@
                                 </div>
                                 <span class="badge badge-success">LIVE SAMPLING</span>
                             </div>
-                            <div class="pfd-container h-full">
+                            <div class="pfd-container">
                                 <canvas id="cal-attitude-canvas"></canvas>
                                 <div class="pfd-metrics-grid">
                                     <div class="mini-stat-card">
                                         <span class="stat-label">Roll</span>
-                                        <span id="cal-val-roll" class="stat-value"><span class="null-value">0.0°</span></span>
+                                        <span id="cal-val-roll" class="stat-value"><span class="null-value">—</span></span>
                                     </div>
                                     <div class="mini-stat-card">
                                         <span class="stat-label">Pitch</span>
-                                        <span id="cal-val-pitch" class="stat-value"><span class="null-value">0.0°</span></span>
+                                        <span id="cal-val-pitch" class="stat-value"><span class="null-value">—</span></span>
+                                    </div>
+                                    <div class="mini-stat-card span-full">
+                                        <span class="stat-label">Yaw / Heading</span>
+                                        <span id="cal-val-yaw" class="stat-value"><span class="null-value">—</span></span>
                                     </div>
                                     <div class="mini-stat-card span-full">
                                         <span class="stat-label">Board Orientation</span>
@@ -614,6 +620,144 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card 2: Navigation & Position -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    <h3 class="card-title">Navigation & Position</h3>
+                                </div>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Latitude</span>
+                                    <span id="cal-val-lat" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Longitude</span>
+                                    <span id="cal-val-lon" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Altitude (MSL)</span>
+                                    <span id="cal-val-alt" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Rel Alt (Home)</span>
+                                    <span id="cal-val-rel-alt" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box span-full">
+                                    <span class="stat-label">Heading</span>
+                                    <span id="cal-val-heading" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Speed & Vehicle Status -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                    <h3 class="card-title">Speed & Vehicle Status</h3>
+                                </div>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Groundspeed</span>
+                                    <span id="cal-val-groundspeed" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Airspeed</span>
+                                    <span id="cal-val-airspeed" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Climb Rate</span>
+                                    <span id="cal-val-climb" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Throttle</span>
+                                    <span id="cal-val-throttle" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-info">
+                                    <span>Throttle Output</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div id="cal-bar-throttle" class="progress-bar-fill fill-primary" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Power & Battery -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="11" x2="23" y2="13"/></svg>
+                                    <h3 class="card-title">Power & Battery</h3>
+                                </div>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-label">Voltage</span>
+                                    <span id="cal-val-voltage" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Current</span>
+                                    <span id="cal-val-current" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box span-full">
+                                    <span class="stat-label">Remaining Battery</span>
+                                    <span id="cal-val-remaining" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-info">
+                                    <span>Battery Status</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div id="cal-bar-battery" class="progress-bar-fill fill-success" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: GPS Information -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.93 4.93dM19.07 4.93M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="3"/></svg>
+                                    <h3 class="card-title">GPS Information</h3>
+                                </div>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-box span-full">
+                                    <span class="stat-label">Fix Type</span>
+                                    <span id="cal-val-fix-type" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">Satellites</span>
+                                    <span id="cal-val-sats" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-label">HDOP</span>
+                                    <span id="cal-val-hdop" class="stat-value"><span class="null-value">—</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: RC Channels (PWM) -->
+                        <div class="card cal-card">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                                    <h3 class="card-title">RC Channels (PWM)</h3>
+                                </div>
+                            </div>
+                            <div id="cal-rc-channel-list" class="channel-list">
+                                <!-- Dynamically generated channel bars -->
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Right Column (65% Width): Interactive Wizard Panes -->
