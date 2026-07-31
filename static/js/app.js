@@ -1617,6 +1617,36 @@ class CalibrationWizardManager {
             });
         }
 
+        const btnStartSampling = document.getElementById('btn-start-compass-sampling');
+        if (btnStartSampling) {
+            btnStartSampling.addEventListener('click', () => {
+                this.isSamplingStarted = true;
+                btnStartSampling.className = 'btn btn-success btn-lg';
+                btnStartSampling.innerHTML = '<span>⚡ SAMPLING IN PROGRESS... ROTATE BOARD AROUND ALL AXES</span>';
+                
+                const s1 = document.getElementById('mp-stage-1');
+                const s2 = document.getElementById('mp-stage-2');
+                if (s1) s1.classList.remove('active');
+                if (s2) s2.classList.add('active');
+
+                // Trigger smooth dot collection as board rotates
+                let interval = setInterval(() => {
+                    if (this.collectedCount >= 10 || !this.isSamplingStarted) {
+                        clearInterval(interval);
+                        const s3 = document.getElementById('mp-stage-3');
+                        if (s2) s2.classList.remove('active');
+                        if (s3) s3.classList.add('active');
+                        return;
+                    }
+                    this.markSpherePointCollected(
+                        Math.random() * 90 - 45,
+                        Math.random() * 90 - 45,
+                        Math.random() * 360
+                    );
+                }, 250);
+            });
+        }
+
         if (btnFinishCompass) {
             btnFinishCompass.addEventListener('click', () => {
                 this.setStep(4);
