@@ -958,7 +958,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
 
         if (calPfd) {
-            setTimeout(() => calPfd.resize(), 100);
+            const triggerCalPfd = () => {
+                calPfd.resize();
+                calPfd.forceRedraw();
+            };
+            triggerCalPfd();
+            setTimeout(triggerCalPfd, 50);
+            setTimeout(triggerCalPfd, 150);
+            setTimeout(triggerCalPfd, 350);
         }
         if (window.calibrationWizard) {
             window.calibrationWizard.onViewOpened();
@@ -1467,18 +1474,28 @@ class CalibrationWizardManager {
         const btnConfirmAccel = document.getElementById('btn-confirm-accel-pos');
         const btnGotoStep3 = document.getElementById('btn-goto-step-3');
         const btnReturnHome = document.getElementById('btn-return-home-now');
-        const frameSelect = document.getElementById('cal-frame-select');
-
-        if (frameSelect) {
-            frameSelect.addEventListener('change', () => {
-                this.renderFrameDiagram();
+        const frameRadios = document.querySelectorAll('input[name="frame_type_radio"]');
+        frameRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                document.querySelectorAll('.mp-frame-row').forEach(row => row.classList.remove('active'));
+                const parentRow = e.target.closest('.mp-frame-row');
+                if (parentRow) parentRow.classList.add('active');
             });
-        }
+        });
 
         if (btnInstall) {
             btnInstall.addEventListener('click', async () => {
-                const sel = document.getElementById('cal-frame-select');
-                const text = sel ? sel.options[sel.selectedIndex].text : 'Quad X';
+                const checkedRadio = document.querySelector('input[name="frame_type_radio"]:checked');
+                const val = checkedRadio ? checkedRadio.value : 'plus';
+                const frameNameMap = {
+                    'plus': "'Plus' (Quad / Hexa / Octo / Heli)",
+                    'x': "'X', 'Y6A' (Quad / Hexa / Octo / Coaxial)",
+                    'v': "'V' Quadrotor",
+                    'vtail': "'V Tail' Quadrotor",
+                    'h': "'H' Quadrotor",
+                    'y6b': "'Y6B' Coaxial Frame"
+                };
+                const text = frameNameMap[val] || val.toUpperCase();
                 try {
                     const res = await fetch('/api/calibration/frame', {
                         method: 'POST',
