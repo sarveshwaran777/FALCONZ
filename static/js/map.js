@@ -40,7 +40,7 @@ class GCSMap {
         }, 150);
 
         // 1. Google Satellite Hybrid (High Resolution Satellite + Prominent Place Names, Towns & Cities)
-        const googleHybridLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        this.googleHybridLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
             attribution: '&copy; Google Maps',
             maxZoom: 20,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
@@ -60,7 +60,7 @@ class GCSMap {
         });
 
         // 4. OpenStreetMap Standard (Full Street & Town Names)
-        const osmStreetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        this.osmStreetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors',
             maxZoom: 19
         });
@@ -75,13 +75,13 @@ class GCSMap {
         const esriLabeledHybrid = L.layerGroup([esriSatelliteLayer, placeLabelsOverlay]);
 
         // Default to Google Hybrid (Satellite + Detailed Place Names) on startup
-        googleHybridLayer.addTo(this.map);
+        this.googleHybridLayer.addTo(this.map);
 
         // Add Layer Control for switching map views
         const baseMaps = {
-            "🛰️ Satellite + Place Names (Google)": googleHybridLayer,
+            "🛰️ Satellite + Place Names (Google)": this.googleHybridLayer,
             "🗺️ Satellite + Place Labels (Esri/Carto)": esriLabeledHybrid,
-            "📍 OpenStreetMap (Full Street & Town Names)": osmStreetLayer,
+            "📍 OpenStreetMap (Full Street & Town Names)": this.osmStreetLayer,
             "🌙 Dark Vector Mode": darkVectorLayer
         };
 
@@ -303,5 +303,25 @@ class GCSMap {
             }
         }
         return this.autoCenter;
+    }
+
+    setSatelliteMode() {
+        if (!this.map) return;
+        if (this.osmStreetLayer && this.map.hasLayer(this.osmStreetLayer)) {
+            this.map.removeLayer(this.osmStreetLayer);
+        }
+        if (this.googleHybridLayer) {
+            this.googleHybridLayer.addTo(this.map);
+        }
+    }
+
+    setStreetMode() {
+        if (!this.map) return;
+        if (this.googleHybridLayer && this.map.hasLayer(this.googleHybridLayer)) {
+            this.map.removeLayer(this.googleHybridLayer);
+        }
+        if (this.osmStreetLayer) {
+            this.osmStreetLayer.addTo(this.map);
+        }
     }
 }

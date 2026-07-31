@@ -1349,6 +1349,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Map Button Event Listeners
+    const btnMapSat = document.getElementById('btn-map-sat');
+    const btnMapStreet = document.getElementById('btn-map-street');
+
+    if (btnMapSat && btnMapStreet) {
+        btnMapSat.addEventListener('click', () => {
+            btnMapSat.className = 'btn btn-primary btn-sm active';
+            btnMapStreet.className = 'btn btn-secondary btn-sm';
+            gcsMap.setSatelliteMode();
+        });
+
+        btnMapStreet.addEventListener('click', () => {
+            btnMapStreet.className = 'btn btn-primary btn-sm active';
+            btnMapSat.className = 'btn btn-secondary btn-sm';
+            gcsMap.setStreetMode();
+        });
+    }
+
     if (elements.btnCenterMap) {
         elements.btnCenterMap.addEventListener('click', () => {
             const isAuto = gcsMap.toggleAutoCenter();
