@@ -702,7 +702,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render Terminal Console Logs accurately with filter and search support
     function renderTerminalLogs(logList) {
-        if (!elements.terminalLogs && !document.getElementById('cal-terminal-logs')) return;
+        const calLogs = document.getElementById('cal-terminal-logs');
+        if (!elements.terminalLogs && !calLogs) return;
         
         let newEntriesAdded = false;
         logList.forEach(entry => {
@@ -712,32 +713,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 newEntriesAdded = true;
 
                 const timeStr = entry.time_str || new Date(entry.timestamp * 1000).toLocaleTimeString();
-                const div = document.createElement('div');
                 const lvl = entry.level || 'info';
-                div.className = `log-entry log-${lvl}`;
-                div.dataset.level = lvl;
-                div.dataset.source = entry.source || 'GCS';
-                div.dataset.msg = (entry.message || '').toLowerCase();
                 
-                div.textContent = `[${timeStr}] ${entry.message}`;
-                applyLogVisibility(div);
+                const createLogDiv = () => {
+                    const div = document.createElement('div');
+                    div.className = `log-entry log-${lvl}`;
+                    div.dataset.level = lvl;
+                    div.dataset.source = entry.source || 'GCS';
+                    div.dataset.msg = (entry.message || '').toLowerCase();
+                    div.textContent = `[${timeStr}] ${entry.message}`;
+                    applyLogVisibility(div);
+                    return div;
+                };
 
                 if (elements.terminalLogs) {
-                    elements.terminalLogs.appendChild(div);
+                    elements.terminalLogs.appendChild(createLogDiv());
                 }
-                const calLogs = document.getElementById('cal-terminal-logs');
                 if (calLogs) {
-                    calLogs.appendChild(div.cloneNode(true));
+                    calLogs.appendChild(createLogDiv());
                 }
             }
         });
 
+        // Limit DOM nodes to 300 entries for performance
         if (elements.terminalLogs) {
             while (elements.terminalLogs.children.length > 300) {
                 elements.terminalLogs.removeChild(elements.terminalLogs.firstChild);
             }
         }
-        const calLogs = document.getElementById('cal-terminal-logs');
         if (calLogs) {
             while (calLogs.children.length > 300) {
                 calLogs.removeChild(calLogs.firstChild);
