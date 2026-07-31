@@ -1974,31 +1974,29 @@ class CalibrationWizardManager {
             return { sx: cx + x3, sy: cy + y3 };
         };
 
-        // Draw 3D Coordinate Axis Lines (Matching Uploaded Screenshot)
-        const len = 110;
-        const axisLines = [
-            // X Axis: Magenta (-X) to Red (+X)
-            { p1: project(-len, 0, 0), p2: project(len, 0, 0), color1: '#EC4899', color2: '#EF4444' },
-            // Y Axis: Cyan (-Y) to Green (+Y)
-            { p1: project(0, -len, 0), p2: project(0, len, 0), color1: '#06B6D4', color2: '#10B981' },
-            // Z Axis: Yellow (-Z) to Blue (+Z)
-            { p1: project(0, 0, -len), p2: project(0, 0, len), color1: '#EAB308', color2: '#3B82F6' }
+        // Draw 6-Axis Coordinate Star Rays radiating from Origin (Matching Uploaded ArduPilot MP Screenshot)
+        const origin = project(0, 0, 0);
+        const len = 115;
+        const axisRays = [
+            { x: 0, y: 0, z: len, color: '#3B82F6' },    // Top Ray (+Z: Blue)
+            { x: 0, y: 0, z: -len, color: '#EAB308' },   // Bottom Ray (-Z: Yellow)
+            { x: len, y: 0, z: 0, color: '#EF4444' },    // Left-Down Ray (+X: Red)
+            { x: -len, y: 0, z: 0, color: '#EC4899' },   // Left-Up Ray (-X: Magenta)
+            { x: 0, y: len, z: 0, color: '#10B981' },    // Right-Down Ray (+Y: Green)
+            { x: 0, y: -len, z: 0, color: '#06B6D4' }    // Right-Up Ray (-Y: Cyan)
         ];
 
-        axisLines.forEach(line => {
-            const grad = ctx.createLinearGradient(line.p1.sx, line.p1.sy, line.p2.sx, line.p2.sy);
-            grad.addColorStop(0, line.color1);
-            grad.addColorStop(1, line.color2);
-
+        axisRays.forEach(ray => {
+            const end = project(ray.x, ray.y, ray.z);
             ctx.beginPath();
-            ctx.moveTo(line.p1.sx, line.p1.sy);
-            ctx.lineTo(line.p2.sx, line.p2.sy);
-            ctx.strokeStyle = grad;
+            ctx.moveTo(origin.sx, origin.sy);
+            ctx.lineTo(end.sx, end.sy);
+            ctx.strokeStyle = ray.color;
             ctx.lineWidth = 2.5;
             ctx.stroke();
         });
 
-        // Rainbow trail color palette for connected dots
+        // Rainbow trail color palette for connected dots (matching ArduPilot MP rainbow trajectory)
         const trailColors = ['#EF4444', '#F97316', '#EAB308', '#10B981', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899', '#F43F5E', '#10B981'];
 
         // Draw Connected Line Segments Joining the Dots
@@ -2011,7 +2009,7 @@ class CalibrationWizardManager {
                 ctx.moveTo(prevPoint.sx, prevPoint.sy);
                 ctx.lineTo(screen.sx, screen.sy);
                 ctx.strokeStyle = trailColors[idx % trailColors.length];
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 3.5;
                 ctx.stroke();
             }
 
