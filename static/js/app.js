@@ -702,7 +702,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Render Terminal Console Logs accurately with filter and search support
     function renderTerminalLogs(logList) {
-        if (!elements.terminalLogs) return;
+        if (!elements.terminalLogs && !document.getElementById('cal-terminal-logs')) return;
         
         let newEntriesAdded = false;
         logList.forEach(entry => {
@@ -720,22 +720,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 div.dataset.msg = (entry.message || '').toLowerCase();
                 
                 div.textContent = `[${timeStr}] ${entry.message}`;
-                
-                // Apply current filter & search visibility
                 applyLogVisibility(div);
 
-                elements.terminalLogs.appendChild(div);
+                if (elements.terminalLogs) {
+                    elements.terminalLogs.appendChild(div);
+                }
+                const calLogs = document.getElementById('cal-terminal-logs');
+                if (calLogs) {
+                    calLogs.appendChild(div.cloneNode(true));
+                }
             }
         });
 
-        // Limit DOM nodes to 300 entries for performance
-        while (elements.terminalLogs.children.length > 300) {
-            elements.terminalLogs.removeChild(elements.terminalLogs.firstChild);
+        if (elements.terminalLogs) {
+            while (elements.terminalLogs.children.length > 300) {
+                elements.terminalLogs.removeChild(elements.terminalLogs.firstChild);
+            }
+        }
+        const calLogs = document.getElementById('cal-terminal-logs');
+        if (calLogs) {
+            while (calLogs.children.length > 300) {
+                calLogs.removeChild(calLogs.firstChild);
+            }
         }
 
         if (newEntriesAdded && autoScrollLogs) {
             requestAnimationFrame(() => {
-                elements.terminalLogs.scrollTop = elements.terminalLogs.scrollHeight;
+                if (elements.terminalLogs) elements.terminalLogs.scrollTop = elements.terminalLogs.scrollHeight;
+                if (calLogs) calLogs.scrollTop = calLogs.scrollHeight;
             });
         }
     }

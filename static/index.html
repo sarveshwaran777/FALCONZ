@@ -758,6 +758,55 @@
                             </div>
                         </div>
 
+                        <!-- Card 7: MAVLink Live Terminal & Command Console -->
+                        <div class="card cal-card col-terminal">
+                            <div class="card-header">
+                                <div class="card-title-group">
+                                    <svg class="card-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                                    <h3 class="card-title">MAVLink Terminal</h3>
+                                </div>
+                                <div class="terminal-actions">
+                                    <button id="cal-btn-clear-terminal" class="btn btn-sm btn-ghost">Clear</button>
+                                    <button id="cal-btn-autoscroll" class="btn btn-sm btn-secondary active">Auto-Scroll</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Quick Action Command Chips -->
+                            <div class="terminal-command-chips">
+                                <button class="cmd-chip chip-arm" data-cmd="ARM">ARM</button>
+                                <button class="cmd-chip chip-disarm" data-cmd="DISARM">DISARM</button>
+                                <button class="cmd-chip chip-action" data-cmd="TAKEOFF 10">TAKEOFF 10m</button>
+                                <button class="cmd-chip chip-action" data-cmd="RTL">RTL</button>
+                                <button class="cmd-chip chip-mode" data-cmd="GUIDED">GUIDED</button>
+                                <button class="cmd-chip chip-mode" data-cmd="AUTO">AUTO</button>
+                                <button class="cmd-chip chip-mode" data-cmd="STABILIZE">STABILIZE</button>
+                                <button class="cmd-chip chip-info" data-cmd="MISSION">FETCH MISSION</button>
+                            </div>
+
+                            <!-- Log Filters & Search Bar -->
+                            <div class="terminal-filter-bar">
+                                <div class="filter-chips-group">
+                                    <button class="filter-chip active" data-filter="all">ALL</button>
+                                    <button class="filter-chip" data-filter="fc">FC STATUS</button>
+                                    <button class="filter-chip" data-filter="cmd">COMMANDS</button>
+                                    <button class="filter-chip" data-filter="error">ERRORS</button>
+                                </div>
+                                <input type="text" id="cal-terminal-search-input" class="saas-search-input" placeholder="Search logs...">
+                            </div>
+
+                            <!-- Terminal Output Window -->
+                            <div id="cal-terminal-logs" class="terminal-logs-window">
+                                <div class="log-entry log-system">[00:00:00] Initializing FALCONZ Ground Control Station Terminal...</div>
+                            </div>
+
+                            <!-- Command Input Form -->
+                            <div class="terminal-input-bar">
+                                <span class="prompt-symbol">&gt;</span>
+                                <input type="text" id="cal-terminal-input" class="saas-cmd-input" placeholder="Enter GCS command (e.g. ARM, DISARM, TAKEOFF 20, RTL)...">
+                                <button id="cal-btn-send-cmd" class="btn btn-primary btn-sm">SEND</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Right Column (65% Width): Interactive Wizard Panes -->
