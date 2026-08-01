@@ -151,13 +151,13 @@
                             <div class="home-card-icon icon-purple">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                             </div>
-                            <span class="home-card-badge badge-purple">TRUEVIEW 172.16.23.19</span>
+                            <span class="home-card-badge badge-purple">LIVE CAM 192.168.137.1:5000</span>
                         </div>
                         <h2 class="home-card-title">Camera View</h2>
-                        <p class="home-card-desc">Live HD video streaming with auto RTSP/HTTP transcoder, TrueView IP camera (172.16.23.19), and VLC player.</p>
+                        <p class="home-card-desc">Live HD video stream connected to http://192.168.137.1:5000/video with auto RTSP/HTTP transcoder and VLC player.</p>
                         <div class="home-card-stats">
-                            <div class="home-stat-chip">TrueView IP</div>
-                            <div class="home-stat-chip">RTSP Transcoder</div>
+                            <div class="home-stat-chip">192.168.137.1:5000</div>
+                            <div class="home-stat-chip">HTTP Video Stream</div>
                         </div>
                         <button id="btn-home-cam" class="btn btn-primary btn-sm btn-block">Explore Camera View →</button>
                     </div>
@@ -497,7 +497,7 @@
                             <div class="input-field-container">
                                 <label for="vlc-ip-input" class="field-label">PASTE IP ADDRESS OR STREAM URL</label>
                                 <div class="input-with-button">
-                                    <input type="text" id="vlc-ip-input" class="saas-input-box" value="172.16.23.19" placeholder="e.g. 172.16.23.19, rtsp://172.16.23.19:554/live">
+                                    <input type="text" id="vlc-ip-input" class="saas-input-box" value="http://192.168.137.1:5000/video" placeholder="e.g. http://192.168.137.1:5000/video">
                                     <button id="btn-paste-clipboard" class="btn btn-secondary btn-sm" title="Paste from Clipboard">Paste</button>
                                 </div>
                             </div>
@@ -506,7 +506,7 @@
                                 <label for="cam-engine-select" class="field-label">PLAYER VIEW ENGINE</label>
                                 <select id="cam-engine-select" class="saas-select-full">
                                     <option value="mjpeg" selected>⚡ Auto RTSP / MJPEG Transcoder</option>
-                                    <option value="iframe">🌐 Direct Web / TrueView HTTP Web Page</option>
+                                    <option value="iframe">🌐 Direct Web / HTTP Web Page</option>
                                     <option value="video">📹 HTML5 Native Video Player</option>
                                 </select>
                             </div>
@@ -514,8 +514,8 @@
                             <div class="input-field-container">
                                 <label for="vlc-protocol-select" class="field-label">STREAM PROTOCOL</label>
                                 <select id="vlc-protocol-select" class="saas-select-full">
-                                    <option value="rtsp://" selected>RTSP (rtsp://)</option>
-                                    <option value="http://">HTTP (http://)</option>
+                                    <option value="http://" selected>HTTP (http://)</option>
+                                    <option value="rtsp://">RTSP (rtsp://)</option>
                                     <option value="https://">HTTPS (https://)</option>
                                     <option value="udp://">UDP (udp://)</option>
                                     <option value="custom">Custom / Direct</option>
@@ -524,15 +524,15 @@
 
                             <div class="preset-chips-row flex-column">
                                 <span class="preset-label">QUICK PRESETS:</span>
+                                <button class="vlc-preset-chip" data-url="http://192.168.137.1:5000/video">🎥 Primary Camera Feed (http://192.168.137.1:5000/video)</button>
                                 <button class="vlc-preset-chip" data-url="rtsp://172.16.23.19:554/live">🎥 TrueView IP Camera (172.16.23.19)</button>
                                 <button class="vlc-preset-chip" data-url="sim">✨ Simulated HD Feed (sim)</button>
                                 <button class="vlc-preset-chip" data-url="rtsp://127.0.0.1:8554/live">Local SITL (127.0.0.1:8554)</button>
-                                <button class="vlc-preset-chip" data-url="http://172.16.23.19:8080/video">TrueView HTTP (8080)</button>
                             </div>
 
                             <div class="constructed-url-bar">
                                 <span class="constructed-label">TARGET:</span>
-                                <input type="text" id="stream-url-input" class="stream-url-full" value="rtsp://172.16.23.19:554/live" readonly>
+                                <input type="text" id="stream-url-input" class="stream-url-full" value="http://192.168.137.1:5000/video" readonly>
                                 <button id="btn-copy-stream-url" class="btn btn-sm btn-ghost" title="Copy Full URL">📋</button>
                             </div>
 

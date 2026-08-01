@@ -306,17 +306,18 @@ def generate_mjpeg_stream(stream_url: str):
     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;tcp|stimeout;2000000;timeout;2000000"
     targets_to_try = [target_clean]
     
-    # If user provided a raw IP like 172.16.23.19, auto-format common TrueView / RTSP IP camera URLs
+    # If user provided a raw IP like 192.168.137.1 or 172.16.23.19, auto-format common HTTP / RTSP IP camera URLs
     if not target_clean.isdigit() and "://" not in target_clean:
         targets_to_try = [
+            f"http://{target_clean}:5000/video",
+            f"http://{target_clean}/video",
+            f"http://{target_clean}:8080/video",
             f"rtsp://{target_clean}:554/live",
             f"rtsp://admin:admin@{target_clean}:554/live",
             f"rtsp://admin:123456@{target_clean}:554/live",
             f"rtsp://admin:admin@{target_clean}:554/ch0_0.264",
             f"rtsp://{target_clean}:554/stream1",
             f"rtsp://{target_clean}:554/h264Preview_01_main",
-            f"http://{target_clean}:8080/video",
-            f"http://{target_clean}/video",
             f"http://{target_clean}/mjpeg",
             target_clean
         ]

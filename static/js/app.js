@@ -949,6 +949,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.viewDroneDashboard) elements.viewDroneDashboard.classList.remove('active');
         if (elements.viewCalibration) elements.viewCalibration.classList.remove('active');
         if (elements.navMenuDropdown) elements.navMenuDropdown.classList.remove('show');
+
+        // Auto-connect camera feed if viewport is currently idle
+        if (elements.camViewport && (!elements.camViewport.querySelector('img') && !elements.camViewport.querySelector('iframe') && !elements.camViewport.querySelector('video'))) {
+            if (elements.btnPlayStream) {
+                setTimeout(() => elements.btnPlayStream.click(), 100);
+            }
+        }
     }
 
     function switchToInspectorView() {
@@ -1085,6 +1092,9 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.streamUrlInput.value = `${selectedProto}${rawIp}`;
         }
     }
+
+    // Initial stream URL sync on load
+    updateFullStreamUrl();
 
     // Listen for IP input changes
     if (elements.vlcIpInput) {
