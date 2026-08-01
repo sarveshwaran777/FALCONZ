@@ -103,6 +103,10 @@
 
         <!-- Right: Status Pills -->
         <div class="navbar-status-group">
+            <button id="btn-rag-copilot-toggle" class="pill-badge pill-copilot" title="Open FALCONZ AI Copilot (Ctrl + K)">
+                <span>🤖 AI COPILOT</span>
+            </button>
+
             <div id="status-badge" class="pill-badge pill-disconnected">
                 <span class="status-dot"></span>
                 <span id="status-text">DISCONNECTED</span>
@@ -1211,11 +1215,51 @@
         </div>
     </div>
 
+    <!-- RAG AI Copilot Floating Drawer -->
+    <div id="rag-copilot-drawer" class="rag-copilot-drawer">
+        <div class="rag-drawer-header">
+            <div class="rag-header-title-wrap">
+                <span class="rag-avatar">🤖</span>
+                <div>
+                    <div class="rag-header-title">FALCONZ AI Copilot</div>
+                    <div class="rag-header-subtitle">RAG Assistant • Telemetry & MAVLink Docs</div>
+                </div>
+            </div>
+            <button id="btn-rag-copilot-close" class="rag-close-btn" title="Close Copilot (Esc)">✕</button>
+        </div>
+
+        <div class="rag-preset-chips-bar">
+            <span class="rag-chips-title">PRESETS:</span>
+            <button class="rag-preset-chip" data-prompt="Check drone safety status and battery level">⚡ Check Safety Status</button>
+            <button class="rag-preset-chip" data-prompt="Explain GUIDED mode and requirements">✈️ GUIDED Mode</button>
+            <button class="rag-preset-chip" data-prompt="How do I perform 6-axis accelerometer calibration?">📐 Accel Calibration</button>
+            <button class="rag-preset-chip" data-prompt="What are normal GPS HDOP and fix values?">🛰️ GPS Quality</button>
+        </div>
+
+        <div id="rag-chat-logs" class="rag-chat-logs">
+            <div class="rag-msg rag-msg-bot">
+                <div class="rag-msg-bubble rag-bot-bubble">
+                    <div class="rag-msg-header">
+                        <span class="rag-msg-author">🤖 FALCONZ AI COPILOT</span>
+                        <span class="rag-msg-time">System Active</span>
+                    </div>
+                    <div class="rag-msg-text">Welcome! I am your GCS AI Copilot. Ask me any question about flight modes, battery safety thresholds, hardware calibration, or live drone telemetry diagnostics. Press <strong>Ctrl + K</strong> to toggle this assistant anytime.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rag-chat-input-bar">
+            <input type="text" id="rag-chat-input" class="rag-input-box" placeholder="Ask AI Copilot (e.g. Check safety status, Explain GUIDED mode)...">
+            <button id="btn-rag-send" class="btn btn-primary btn-sm">SEND</button>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="/static/js/orb.js?v=18.0.0"></script>
     <script src="/static/js/attitude_indicator.js?v=18.0.0"></script>
     <script src="/static/js/telemetry_inspector.js?v=18.0.0"></script>
     <script src="/static/js/map.js?v=18.0.0"></script>
+    <script src="/static/js/rag_copilot.js?v=18.0.0"></script>
     <script src="/static/js/app.js?v=18.0.0"></script>
 </body>
 </html>

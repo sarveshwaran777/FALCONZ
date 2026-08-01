@@ -18,6 +18,7 @@ import uvicorn
 
 from database import TelemetryDB
 from mavlink_manager import MAVLinkManager
+from rag_engine import RAGEngine
 
 # Configure logging
 logging.basicConfig(
@@ -45,6 +46,7 @@ except Exception:
 # Global instances
 db = TelemetryDB(db_path=args.db)
 mav_manager = MAVLinkManager(connection_string=args.connection, baud=args.baud, db_instance=db)
+rag_engine = RAGEngine()
 
 # Active WebSocket connections
 active_connections: Set[WebSocket] = set()
@@ -436,6 +438,26 @@ async def set_compass_calibration():
     if mav_manager:
         mav_manager.add_terminal_log("[CALIB] Compass 3D sphere rotation calibration started. Collect 360-degree point data.", level="warn")
     return {"status": "ok", "message": "Compass calibration mode active"}
+
+# RAG AI Copilot Endpoints
+class RAGQueryRequest(BaseModel):
+    query: str
+
+@app.post("/api/rag/query")
+async def rag_query_endpoint(req: RAGQueryRequest):
+    """Executes Retrieval-Augmented Generation using live drone telemetry context."""
+    telemetry_state = mav_manager.get_state() if mav_manager else {}
+    result = rag_engine.query(user_query=req.query, telemetry_state=telemetry_state)
+    return JSONResponse(content=result)
+
+@app.get("/api/rag/status")
+async def rag_status_endpoint():
+    """Returns RAG Engine health status and document count."""
+    return JSONResponse(content={
+        "status": "active",
+        "total_documents": len(rag_engine.documents),
+        "engine": "TF-IDF Vector Retriever + Live Telemetry Fusion"
+    })
 
 if __name__ == "__main__":
     logger.info(f"Launching APM Dashboard server on http://{args.host}:{args.port}")
