@@ -419,5 +419,5 @@ FalconZ demonstrates my ability to design, build, and deploy an **end-to-end, mu
 ---
 
 <p align="center">
-  <b>Developed by Sarveshwaran</b> • Built with Python, FastAPI & MAVLink
+  <b>FalconZ GCS</b> • Built with Python, FastAPI & MAVLink
 </p>
