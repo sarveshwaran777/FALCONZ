@@ -9,6 +9,8 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Time--Series%20Logs-003B57.svg)](https://www.sqlite.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8.svg)](https://opencv.org/)
 
+![FALCONZ Web Ground Control Station](static/images/falconz_pfd_map_dashboard.png)
+
 > [!NOTE]
 > **THE UNIVERSAL FLIGHT CONTROLLER VISION**
 > 
@@ -366,15 +368,11 @@ Connect your flight controller via USB or Telemetry Radio (915MHz / 433MHz):
 
 ## 13. Screenshots Section
 
-> *Note: Place visual screenshots of the FalconZ interface in `static/images/` to display here.*
+### 🛸 Live Primary Flight Display & Leaflet GPS Map Dashboard
+![FALCONZ PFD & Map Dashboard](static/images/falconz_pfd_map_dashboard.png)
 
-| Primary Flight Display & Map | Telemetry Inspector & Time Scrubber |
-| :---: | :---: |
-| *(Artificial Horizon, Pitch Ladder & Leaflet Map)* | *(Historical Replay & SQLite Timeline Controls)* |
-
-| RAG AI Copilot Drawer | Camera View & ORB Vision Overlay |
-| :---: | :---: |
-| *(Context-Aware Flight Diagnostics)* | *(OpenCV Feature Detection Stream)* |
+### 🤖 Telemetry-Augmented AI Copilot Chat Drawer
+![FALCONZ AI Copilot Chat Drawer](static/images/falconz_ai_copilot_chat.png)
 
 ---
 
