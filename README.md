@@ -9,7 +9,8 @@
 [![SQLite](https://img.shields.io/badge/SQLite-Time--Series%20Logs-003B57.svg)](https://www.sqlite.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8.svg)](https://opencv.org/)
 
-![FALCONZ Web Ground Control Station](static/images/falconz_pfd_map_dashboard.png)
+### 🎬 Live Demo Animation
+![FALCONZ Interactive Demo Animation](static/images/falconz_demo.webp)
 
 > [!NOTE]
 > **THE UNIVERSAL FLIGHT CONTROLLER VISION**
@@ -366,7 +367,10 @@ Connect your flight controller via USB or Telemetry Radio (915MHz / 433MHz):
 
 ---
 
-## 13. Screenshots Section
+## 13. Screenshots & Live Demo Section
+
+### 🎬 Interactive Web GCS Demo Animation
+![FALCONZ Live Demo Animation](static/images/falconz_demo.webp)
 
 ### 🛸 Live Primary Flight Display & Leaflet GPS Map Dashboard
 ![FALCONZ PFD & Map Dashboard](static/images/falconz_pfd_map_dashboard.png)
