@@ -10,23 +10,25 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8.svg)](https://opencv.org/)
 
 > [!NOTE]
-> **UNIVERSAL FLIGHT CONTROLLER & TELEMETRY COMPATIBILITY**
+> **THE UNIVERSAL FLIGHT CONTROLLER VISION**
 > 
-> **FalconZ is NOT restricted to APM (ArduPilot Mega).** It is an open, universal Ground Control Station designed to support **ALL types of Flight Controllers** (ArduPilot/APM, PX4 Autopilot, INAV, Betaflight with MAVLink telemetry bridge, LibrePilot, and custom embedded/autonomous flight stacks) and **ALL Telemetry Connections** (UDP, TCP, Serial COM ports, 915MHz/433MHz Telemetry Radios, and SITL Simulators).
+> **Every traditional flight controller requires its own specific, vendor-locked software system to calibrate and monitor telemetry** (e.g. Mission Planner for ArduPilot/APM, QGroundControl for PX4, INAV Configurator for INAV, Betaflight Configurator for FPV). 
+> 
+> **FalconZ breaks this fragmentation.** It provides a **single, universal, web-native platform** capable of interfacing with, calibrating, monitoring, and diagnosing **ALL types of flight controllers** (ArduPilot/APM, PX4, INAV, Betaflight with MAVLink bridge, LibrePilot, and custom embedded robotics stacks) and **ALL telemetry connection modes** (UDP, TCP, Serial COM ports, 915MHz/433MHz radios, and SITL simulators) in one unified system.
 
 ---
 
-## 🌐 Universal Flight Controller & Telemetry Support
+## 🌐 Universal Flight Controller & Calibration Platform
 
 > [!IMPORTANT]
-> **FalconZ is NOT tied to APM or a single vendor.** It is built on universal protocol standards (MAVLink v1/v2, standard serial streams, and UDP/TCP sockets) to seamlessly interface with any drone hardware, autopilot, or vehicle frame.
+> **One Universal Interface for Any Flight Controller.** Instead of switching between multiple vendor-specific GCS tools, FalconZ establishes a normalized MAVLink v1/v2 telemetry and calibration pipeline that supports any UAV platform, frame type, or autopilot hardware.
 
-| Platform / Autopilot | Compatibility Status | Supported Vehicles |
+| Platform / Autopilot | Compatibility Status | Calibration & Telemetry Capabilities |
 | :--- | :--- | :--- |
-| **ArduPilot (APM)** | Full Native Support | Quadrotor, Hexa, Octo, Fixed-Wing, VTOL, Rover, Submarine, Coaxial |
-| **PX4 Autopilot** | Full Native Support | Multicopters, VTOL (Tailsitters, Tiltrotors), Fixed-Wing, Rovers |
-| **INAV / Betaflight** | Supported via MAVLink Telemetry Bridge | Multicopters, FPV Wings, Micro Drones |
-| **Custom Embedded FCs** | Supported via MAVLink 1.0/2.0 or Serial Stream | Custom Robotics, Autonomous Ground Vehicles, Experimental UAVs |
+| **ArduPilot (APM)** | Full Native Support | 6-Axis Accel, 3D Compass Sphere, RC Channels, Live PFD & Map |
+| **PX4 Autopilot** | Full Native Support | Multicopter/VTOL Telemetry, Offboard/Hold Modes, Sensor Calibration |
+| **INAV / Betaflight** | Supported via MAVLink Bridge | Real-Time Telemetry, RC PWM Gauges, GPS Tracking, Battery Alarm |
+| **Custom Embedded FCs** | Supported via MAVLink / Serial | Custom Robotics, AGVs, Experimental UAVs, Serial Data Stream |
 | **SITL / Simulators** | Full Native Support | ArduPilot SITL, PX4 Gazebo, AirSim, X-Plane, Custom Simulators |
 
 ---
@@ -57,13 +59,18 @@
 ## 1. Project Overview
 
 ### What is FalconZ?
-**FalconZ** is a full-stack, web-native Ground Control Station (GCS) and real-time UAV diagnostic platform. It establishes a multi-threaded telemetry bridge between unmanned aircraft (or flight simulators) and a modern browser interface. FalconZ combines real-time flight instrument rendering (Artificial Horizon/PFD), interactive map navigation, SQLite-backed telemetry historical replay, OpenCV camera vision with ORB feature detection, and a self-contained AI Copilot that fuses live flight telemetry with indexed aerospace manuals to deliver context-aware diagnostics and pre-arm safety guidance.
+**FalconZ** is a full-stack, web-native Ground Control Station (GCS) and real-time UAV diagnostic platform. It establishes a multi-threaded telemetry and calibration bridge between unmanned aircraft (or flight simulators) and a modern browser interface. FalconZ combines real-time flight instrument rendering (Artificial Horizon/PFD), interactive map navigation, SQLite-backed telemetry historical replay, OpenCV camera vision with ORB feature detection, step-by-step universal sensor calibration, and a self-contained AI Copilot that fuses live flight telemetry with indexed aerospace manuals to deliver context-aware diagnostics and pre-arm safety guidance.
 
 ### Why Was It Created?
-Traditional ground control stations (such as QGroundControl and Mission Planner) were built as native desktop applications tied to specific legacy environments. While functional, they suffer from cross-platform friction, complex UI customization, heavy resource footprints, vendor lock-in, and zero native integration with modern web standards or AI-driven diagnostic engines. FalconZ was created to demonstrate that a browser-native GCS can match native desktop responsiveness (~5 Hz to 50 Hz telemetry updates) while offering universal flight controller support, zero-install access, modern visual design, and real-time AI reasoning over live telemetry streams.
+Historically, drone developers and pilots have been forced to install and maintain **separate software environments for each specific flight controller type**:
+* **Mission Planner / APM Planner**: Only for ArduPilot/APM flight controllers.
+* **QGroundControl**: Primary choice for PX4.
+* **INAV Configurator / Betaflight Configurator**: Required for INAV or Betaflight FPV boards.
+
+This software fragmentation creates immense setup friction, vendor lock-in, and steep learning curves. FalconZ was created to demonstrate that **a single, browser-native GCS can unify all types of flight controllers under one intuitive interface**, offering universal telemetry monitoring, standardized calibration routines, zero-install access, modern visual design, and real-time AI reasoning.
 
 ### Who is the Target Audience?
-* **Drone Engineers & Software Developers**: Who need a universal, extensible web interface for field diagnostics, protocol testing, and custom telemetry visualization across multiple flight controllers.
+* **Drone Engineers & Software Developers**: Who need a universal, extensible web interface to configure, calibrate, test, and visualize telemetry across multiple flight controller architectures without swapping GCS applications.
 * **UAV Operators & Test Pilots**: Who require a clean, responsive, dark-mode ground station capable of running on tablets, field laptops, or companion computers without installation overhead.
 * **Aerospace Researchers & Autonomous Systems Students**: Who seek a modular codebase to experiment with multi-protocol telemetry handling, time-series telemetry logging, computer vision tracking, and RAG-based automated flight assistants.
 
@@ -72,14 +79,14 @@ Traditional ground control stations (such as QGroundControl and Mission Planner)
 ## 2. Problem Statement
 
 ### What Problems Exist in Current Drone Software?
-1. **Vendor & Hardware Lock-In**: Many GCS platforms are tightly coupled to specific flight controller firmware branches or proprietary hardware transceivers, forcing developers to switch software when testing different aircraft.
+1. **Software Fragmentation & Vendor Lock-In**: Every flight controller type traditionally requires its own dedicated software tool to calibrate sensors and configure flight parameters. Operators managing a fleet of different drones must learn, install, and update 3–4 separate GCS software packages.
 2. **Heavy Native Dependencies & Installation Friction**: Desktop GCS tools require platform-specific installers, GPU driver configurations, and bulky runtime environments. Remote monitoring on field tablets or web browsers requires complex video capture or streaming hacks.
 3. **Cluttered & Outdated User Interfaces**: Legacy GCS software often presents overwhelming interfaces packed with hundreds of unorganized parameters, making key metrics (like HDOP, battery cell voltage, and arming inhibitors) difficult to spot during high-stress flight operations.
 4. **Black-Box Diagnostic Failures**: When a drone refuses to arm or experiences a pre-arm check failure (e.g., `COMPASS_OFS_X` out of bounds, high HDOP, or EKF check failure), operators must manually search dense technical documentation or forums while in the field.
 5. **Lack of Native Real-Time AI Assistance**: Traditional software displays raw numeric telemetry without semantic context. They cannot answer questions like *"Why is GUIDED mode failing right now based on my current GPS HDOP and satellite count?"*
 
 ### Pain Points Faced by Developers & Pilots
-* **Multi-Vehicle Setup Complexity**: Swapping between an ArduPilot quadcopter, a PX4 VTOL, and an INAV FPV wing requires maintaining multiple desktop GCS tools with different controls.
+* **Multi-Vehicle Software Switching**: Swapping between an ArduPilot quadcopter, a PX4 VTOL, and an INAV FPV wing requires switching between Mission Planner, QGroundControl, and INAV Configurator—each with entirely different shortcuts, calibration workflows, and menu structures.
 * **Field Setup Latency**: Setting up ground control software on a new field laptop takes 15–30 minutes of installing software, configuring drivers, and setting up serial ports.
 * **Telemetry Replay Frustration**: Replaying binary `.tlog` or `.bin` files usually requires launching separate offline analysis tools, preventing quick side-by-side comparison of past flight anomalies against live telemetry.
 
@@ -89,7 +96,8 @@ Traditional ground control stations (such as QGroundControl and Mission Planner)
 
 ### How FalconZ Solves These Problems
 FalconZ decouples the telemetry receiver from the client interface using a universal Python backend (FastAPI + PyMAVLink) and lightweight WebSocket streaming:
-* **Universal Flight Controller Interoperability**: Out-of-the-box support for MAVLink v1.0 and v2.0 message parsing, allowing seamless communication with ArduPilot, PX4, INAV, Betaflight (via MAVLink bridge), and custom robotics controllers.
+* **Single Universal Platform for All Flight Controllers**: Replaces fragmented vendor software with a unified web GCS that calibrates, streams, and diagnoses ArduPilot, PX4, INAV, Betaflight (via MAVLink bridge), and custom embedded flight controllers.
+* **Universal Calibration Assistant**: Standardized, step-by-step visual UI guides for 6-axis accelerometer leveling, 3D compass sphere rotation, and radio RC channel setup regardless of the underlying autopilot board.
 * **Zero-Install Web Access**: Serves an aerospace-grade Web GCS accessible over standard HTTP/WebSocket ports on any desktop, tablet, or mobile browser.
 * **Dynamic Primary Flight Display (PFD)**: Renders a smooth 60 FPS artificial horizon, pitch ladder, roll arc, airspeed/altitude ladders, and heading tapes directly onto HTML5 Canvas elements.
 * **Telemetry-Augmented AI Copilot (RAG Engine)**: A self-contained semantic retrieval engine that cross-references user queries with indexed technical documentation and active MAVLink telemetry snapshots to explain warnings, suggest corrective actions, and guide calibration routines.
