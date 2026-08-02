@@ -1229,11 +1229,12 @@
         </div>
 
         <div class="rag-preset-chips-bar">
-            <span class="rag-chips-title">PRESETS:</span>
-            <button class="rag-preset-chip" data-prompt="Check drone safety status and battery level">⚡ Check Safety Status</button>
-            <button class="rag-preset-chip" data-prompt="Explain GUIDED mode and requirements">✈️ GUIDED Mode</button>
-            <button class="rag-preset-chip" data-prompt="How do I perform 6-axis accelerometer calibration?">📐 Accel Calibration</button>
-            <button class="rag-preset-chip" data-prompt="What are normal GPS HDOP and fix values?">🛰️ GPS Quality</button>
+            <span class="rag-chips-title">QUICK CHATS:</span>
+            <button class="rag-preset-chip" data-prompt="How is my drone doing? Check status">🛸 Drone Status</button>
+            <button class="rag-preset-chip" data-prompt="Is my battery level safe for flight?">🔋 Battery Check</button>
+            <button class="rag-preset-chip" data-prompt="How do I use GUIDED mode?">✈️ GUIDED Mode</button>
+            <button class="rag-preset-chip" data-prompt="How to calibrate compass outdoors?">🧭 Compass Cal</button>
+            <button class="rag-preset-chip" data-prompt="What is GPS HDOP and why does it matter?">🛰️ GPS HDOP</button>
         </div>
 
         <div id="rag-chat-logs" class="rag-chat-logs">
@@ -1241,15 +1242,15 @@
                 <div class="rag-msg-bubble rag-bot-bubble">
                     <div class="rag-msg-header">
                         <span class="rag-msg-author">🤖 FALCONZ AI COPILOT</span>
-                        <span class="rag-msg-time">System Active</span>
+                        <span class="rag-msg-time">Online</span>
                     </div>
-                    <div class="rag-msg-text">Welcome! I am your GCS AI Copilot. Ask me any question about flight modes, battery safety thresholds, hardware calibration, or live drone telemetry diagnostics. Press <strong>Ctrl + K</strong> to toggle this assistant anytime.</div>
+                    <div class="rag-msg-text">Hey pilot! 👋 I'm your FALCONZ AI Flight Assistant. I'm watching your live telemetry and ready to help. Try asking <em>"How is my drone doing?"</em> or <em>"Is my battery safe?"</em>. Toggle anytime with <strong>Ctrl + K</strong>!</div>
                 </div>
             </div>
         </div>
 
         <div class="rag-chat-input-bar">
-            <input type="text" id="rag-chat-input" class="rag-input-box" placeholder="Ask AI Copilot (e.g. Check safety status, Explain GUIDED mode)...">
+            <input type="text" id="rag-chat-input" class="rag-input-box" placeholder="Ask your copilot (e.g., 'How is my drone?', 'Is battery safe?')...">
             <button id="btn-rag-send" class="btn btn-primary btn-sm">SEND</button>
         </div>
     </div>
