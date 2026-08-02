@@ -138,14 +138,28 @@ class RAGEngine:
             {
                 "id": "arming_checks",
                 "category": "Safety & Arming",
-                "title": "Pre-Arming Safety Checks",
-                "keywords": ["arm", "disarm", "arming", "pre-arm", "check", "safety", "switch"],
+                "title": "Universal Pre-Arming Safety Checks",
+                "keywords": ["arm", "disarm", "arming", "pre-arm", "check", "safety", "switch", "px4", "ardupilot", "inav"],
                 "content": (
-                    "Pre-arm checks verify flight controller readiness before spinning motors. Checks include: "
+                    "Pre-arm checks verify flight controller readiness across ArduPilot, PX4, and INAV before spinning motors. Checks include: "
                     "1. IMU & Gyro calibration status, 2. Compass health & offsets, 3. Barometer pressure stability, "
                     "4. GPS 3D Fix & HDOP, 5. RC Receiver connection, 6. Battery voltage levels."
                 ),
-                "recommendations": "Never disable ARMING_CHECK parameters unless performing indoor bench testing without propellers."
+                "recommendations": "Never disable pre-arm safety checks unless performing indoor bench testing without propellers."
+            },
+
+            # Universal Flight Controller Support
+            {
+                "id": "fc_compatibility",
+                "category": "Flight Controller Architecture",
+                "title": "Universal Autopilot & Telemetry Support",
+                "keywords": ["flight controller", "autopilot", "px4", "ardupilot", "apm", "inav", "betaflight", "mavlink", "telemetry"],
+                "content": (
+                    "FALCONZ supports all major open-source and enterprise flight controllers via MAVLink v1.0 and v2.0 protocols. "
+                    "Compatible autopilots include ArduPilot (Copter, Plane, Rover, Sub), PX4 Autopilot (Multicopter, VTOL, Fixed-Wing), "
+                    "INAV (via MAVLink telemetry stream), and custom embedded robotics controllers."
+                ),
+                "recommendations": "Select the appropriate baud rate (typically 57600 for RF telemetry radios, 115200 for direct USB) when connecting."
             }
         ]
 
